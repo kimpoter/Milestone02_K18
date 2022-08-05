@@ -1,0 +1,38 @@
+{
+    "tag": {
+        "name": "Tags",
+        "items": [
+        { "title": "Ayam", "flag": false},
+        { "title": "Bebek", "flag": false},
+        { "title": "Sapi", "flag": false},
+        { "title": "Seafood", "flag": false}
+        ]},
+    "payment_method": {
+        "name": "Cara Pembayaran",
+        "items": [
+        { "title": "Cash", "flag": false},
+        { "title": "OVO", "flag": false},
+        { "title": "Gopay", "flag": false},
+        { "title": "ShopeePay", "flag": false},
+        { "title": "Dana", "flag": false},
+        { "title": "Transfer Bank", "flag": false}
+        ]},
+    "price_range": {
+        "name": "Harga",
+        "items": [
+        { "title": "0 - 10K", "flag": false, "min": 0, "max": 10000},
+        { "title": "10K - 20K", "flag": false, "min": 10000, "max": 20000},
+        { "title": "20K - 30K", "flag": false, "min": 20000, "max": 30000},
+        { "title": "30K - 40K", "flag": false, "min": 30000, "max": 40000},
+        { "title": "40K - 50K", "flag": false, "min": 40000, "max": 50000},
+        { "title": "> 50K", "flag": false, "min": 50000, "max": 999999}
+        ]},
+    "platform": {
+        "name": "Platform Pembelian",
+        "items": [
+        { "title": "Beli Langsung", "flag": false},
+        { "title": "ShopeeFood", "flag": false},
+        { "title": "GoFood", "flag": false},
+        { "title": "GrabFood", "flag": false}
+        ]}
+}
