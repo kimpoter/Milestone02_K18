@@ -1,111 +1,119 @@
-import { useReducer, useState } from "react";
-import Filter from "./filter";
+import { useEffect, useState } from "react";
 
-const initialState = Filter;
+// formatting
+function ArrayToFilterTab({ title, array }) {
+    return (
+        <div>
+            <label className="font-semibold sm:text-xl text-lg">{title}</label>
+            <ul className="flex flex-row flex-wrap items-center mr-2 mt-4">
+            {Array.isArray(array) && array.map((element, index) => {
+                return (
+                <button key={index} className={element.selected ? "chips-primary mt-2 mr-2" : "chips-secondary mt-2 mr-2"}>
+                    {element.name}
+                </button>
+                )
+            })}
+            </ul>
+        </div>
+    )
+}
 
-const ACTIONS = {
-    SELECT_ON: 'select-on',
-};
-
-const FILTER = {
-    TAG: Filter.tag.name,
-    PAYMENT_METHOD: Filter.payment_method.name,
-    PRICE_RANGE: Filter.price_range.name,
-    PLATFORM: Filter.platform.name,
-};
-
-function reducer(state, action) {
-    switch (action.type) {
-        case ACTIONS.SELECT_ON:
-            return { ...state };
-        default:
-            return state;
-    };
-};
+const initialPriceRange = [{
+    name: '0 - 10K',
+    min: 0,
+    max: 10000,
+    selected: false
+},{
+    name: '10K - 20K',
+    min: 10000,
+    max: 20000,
+    selected: false
+},{
+    name: '20K - 30K',
+    min: 20000,
+    max: 30000,
+    selected: false
+},{
+    name: '30K - 40K',
+    min: 30000,
+    max: 40000,
+    selected: false
+},{
+    name: '40K - 50K',
+    min: 40000,
+    max: 50000,
+    selected: false
+},{
+    name: '50K - 60K',
+    min: 50000,
+    max: 999999,
+    selected: false
+}]
 
 function FilterTab() {
-    const [state, dispatch] = useReducer(reducer, initialState);
-    const [minPrice, setMinPrice] = useState('');
-    const [maxPrice, setMaxPrice] = useState('');
+    const [ categories, setCategories ] = useState(null)
+    const [ paymentMethods, setPaymentMethods ] = useState(null)
+    const [ platforms, setPlatforms ] = useState([])
+    const [ priceRange, setPriceRange ] = useState(initialPriceRange)
+    
+    useEffect(() => {
+        fetch("http://localhost:8000/tempatMakan")
+        .then((res) => {
+            return res.json()
+        }).then((data) => {
+            const newPaymentMethods = []
+            Object.keys(data[0].paymentMethods).map((accumulator, key) => {
+                const paymentMethod = new Object()
+                paymentMethod.name = accumulator
+                paymentMethod.selected = false
+                newPaymentMethods.push(paymentMethod)
+              });
 
-    function selectFilter(filter, index) {
-        switch (filter) {
-            case FILTER.TAG:
-                state.tag.items[index].flag = !state.tag.items[index].flag;
-                break
-            case FILTER.PAYMENT_METHOD:
-                state.payment_method.items[index].flag = !state.payment_method.items[index].flag;
-                break
-            case FILTER.PRICE_RANGE:
-                setMinPrice('');
-                setMaxPrice('');
-                state.price_range.items[index].flag = !state.price_range.items[index].flag;
-                state.price_range.items.forEach((item, idx) => {
-                    if (idx !== index) {
-                        item.flag = false
-                    } 
-                })
-                break
-            case FILTER.PLATFORM:
-                state.platform.items[index].flag = !state.platform.items[index].flag;
-                break
-            default:
-                console.log(new Error())
-        };
+            const newPlatforms = []
+            Object.keys(data[0].platform).map((accumulator, key) => {
+                const platform = new Object()
+                platform.name = accumulator
+                platform.selected = false
+                newPlatforms.push(platform)
+            });
 
-        dispatch({
-            type: ACTIONS.SELECT_ON
-        });
-    };
-
-    function handleMinPrice(e) {
-        setMinPrice(e.target.value)
-        state.price_range.items.forEach((item) => {
-            item.flag = false
+            setPaymentMethods(newPaymentMethods)
+            setPlatforms(newPlatforms)
         })
-    };
+    },[])
 
-    function handleMaxPrice(e) {
-        setMaxPrice(e.target.value)
-        state.price_range.items.forEach((item) => {
-            item.flag = false
+    useEffect(() => {
+        fetch("http://localhost:8000/category")
+        .then((res) => {
+            return res.json()
+        }).then((data) => {
+            const newCategories = []
+            data.forEach(category => {
+                category.selected = false
+                newCategories.push(category)
+            })
+
+            setCategories(newCategories)
         })
-    };
-
-    function handleApplyFilter() {
-        console.log({...state})
-        console.log('min price', minPrice)
-        console.log('max price', maxPrice)
-    };
+    },[])
 
     return (
-        <div className="w-[70vw] my-6 bg-greyscale px-8 py-6 rounded-2xl space-y-8">
-            {Object.entries(state).map(([key, value]) => {
-                return (
-                <div key={key}>
-                    <label className="font-semibold text-xl">{value.name}</label>
-                    {value.name === FILTER.PRICE_RANGE && 
-                    <form className="space-x-2 mt-4">
-                        <input type="number" placeholder="Min." value={minPrice} onChange={handleMinPrice} min="0" max="999999" className="chips-secondary w-[150px]"/>
-                        <span>-</span>
-                        <input type="number" placeholder="Maks." value={maxPrice} onChange={handleMaxPrice} min="0" max="999999" className="chips-secondary w-[150px]"/>
-                    </form>
-                    }
-                    <ul className="flex flex-row flex-wrap items-center space-x-2 mt-4">
-                    {value.items.map((item, index) => {
-                        return (
-                        <button key={index} onClick={() => selectFilter(value.name, index)} className={item.flag ? "chips-primary" : "chips-secondary"}>
-                            {item.title}
-                        </button>
-                        )
-                    })}
-                    </ul>
-                </div>
-                );
-            })};
+        <div className="w-[70vw] my-6 bg-greyscale px-8 py-6 rounded-2xl space-y-8 sm:text-lg text-sm">
+            <ArrayToFilterTab title="Kategori" array={categories} />
+            <ArrayToFilterTab title="Cara Pembayaran" array={paymentMethods} />
+            <div>
+                <label className="font-semibold sm:text-xl text-lg">Harga</label>
+                <form className="mt-4">
+                    <input type="number" placeholder="Min." min="0" max="999999" className="chips-secondary sm:w-[150px] w-[80px]"/>
+                    <span className="px-1">-</span>
+                    <input type="number" placeholder="Maks." min="0" max="999999" className="chips-secondary sm:w-[150px] w-[80px]"/>
+                </form>
+                <ArrayToFilterTab title="" array={priceRange} />
+            </div>
+            <ArrayToFilterTab title="Platform Pembelian" array={platforms} />
 
             <div className="flex justify-end w-full">
-                <button onClick={handleApplyFilter} className="btn-primary items-end">Terapkan Filter</button>
+                <button className="btn-primary items-end">Terapkan Filter</button>
             </div>
         </div>
     );
