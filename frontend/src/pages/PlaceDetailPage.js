@@ -1,24 +1,23 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useParams } from "react-router-dom";
-import { DetailCard, MenuCard } from "../components/PlaceCard";
+import { DetailCard } from "../components/PlaceCard";
 
 function PlaceDetailPage() {
     const { id } = useParams()
     const [ placeData, setPlaceData ] = useState(null)
 
-    useEffect(() => {
-        fetch("http://localhost:8000/tempatMakan") // ini nanti harusnya ada url yang bakal langsung nge fetch data tempat makan sesuai id nya
-        .then((res) => {
-            return res.json()
-        }).then((data) => {
-            data.forEach(element => {
-                if (element.id == id) {
-                    setPlaceData(element)
-                    return
-                }
-            });
-        })
-    }, [])
+
+    fetch("http://localhost:8000/tempatMakan") // ini nanti harusnya ada url yang bakal langsung nge fetch data tempat makan sesuai id nya
+    .then((res) => {
+        return res.json()
+    }).then((data) => {
+        data.forEach(element => {
+            if (element.id === id) {
+                setPlaceData(element)
+                return
+            }
+        });
+    })
 
     // TODO : fetching menu data
     return (

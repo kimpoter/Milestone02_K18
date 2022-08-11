@@ -13,7 +13,7 @@ function PlaceDisplay({ place_data_url }) {
         }).then((data) => {
             setPlaceData(data)
         })
-    }, [])
+    }, [place_data_url])
 
     return (
         <ul className="flex flex-row flex-wrap justify-center">

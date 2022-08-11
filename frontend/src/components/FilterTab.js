@@ -63,18 +63,18 @@ function FilterTab() {
         }).then((data) => {
             const newPaymentMethods = []
             Object.keys(data[0].paymentMethods).map((accumulator, key) => {
-                const paymentMethod = new Object()
+                const paymentMethod = {}
                 paymentMethod.name = accumulator
                 paymentMethod.selected = false
-                newPaymentMethods.push(paymentMethod)
+                return newPaymentMethods.push(paymentMethod)
               });
 
             const newPlatforms = []
             Object.keys(data[0].platform).map((accumulator, key) => {
-                const platform = new Object()
+                const platform = {}
                 platform.name = accumulator
                 platform.selected = false
-                newPlatforms.push(platform)
+                return newPlatforms.push(platform)
             });
 
             setPaymentMethods(newPaymentMethods)
