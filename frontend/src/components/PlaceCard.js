@@ -22,7 +22,7 @@ function Rating({ rating, position }) {
 export function PreviewCard({ place, category }) {
     return (
         <div className="mx-2 shadow-xl  bg-white px-4 py-4 mt-8 sm:w-[270px] w-[200px] sm:min-h-[270px] min-h-[200px] rounded-3xl relative hover:cursor-pointer">
-            <img src={place.image_url ? place.image_url : "placeholder.jpg"} alt="placeholder" className="rounded-xl aspect-[4/3] object-cover" />
+            <img src={place.imageUrl ? place.imageUrl : "placeholder.jpg"} alt="placeholder" className="rounded-xl aspect-[4/3] object-cover" />
             <Rating position={"absolute top-6 right-6 z-1"} rating={place.rating}/>
             <h2 className="mt-4">{place.name}</h2>
             <ul className="opacity-50">
@@ -38,16 +38,16 @@ export function PreviewCard({ place, category }) {
 export function DetailCard({ place, category }) {
     return (
         <div className="card sm:text-base text-sm flex lg:flex-row flex-col">
-            <img src={place.image_url ? place.image_url : "placeholder.jpg"} alt="placeholder" className="rounded-xl aspect-[4/3] object-cover w-[400px] mr-8" />
+            <img src={place.imageUrl ? place.imageUrl : "placeholder.jpg"} alt="placeholder" className="rounded-xl aspect-[4/3] object-cover w-[400px] mr-8" />
             <div className="space-y-2 lg:mt-0 mt-4">
                 <div className="flex sm:flex-row flex-col sm:space-x-4 sm:space-y-0 space-y-2 sm:items-center">
                     <Rating rating={place.rating}/>
                     <h1>{place.name}</h1>
                 </div>
                 <p>{formatTimeToLocalTime(place.timeOpen)} - {formatTimeToLocalTime(place.timeClose)} | {category.join(', ')}</p>
-                <div className="flex flex-row items-center space-x-4 bg-greyscale px-6 py-2 rounded-lg w-fit opacity-50">
+                <div className="flex flex-row items-center space-x-4 bg-greyscale px-6 py-2 rounded-lg w-full opacity-50">
                     <BsLink45Deg />
-                    <a>{place.address}</a>
+                    <a href={place.addressLink}>{place.addressLink}</a>
                 </div>
                 <h2>Deskripsi</h2>
                 <p>{place.description}</p>
