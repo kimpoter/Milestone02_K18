@@ -1,0 +1,143 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+
+  userVerificationToken UserVerificationToken?
+  changePasswordToken   ChangePasswordToken?
+  tempatMakan           TempatMakan[]
+  reviews               Review[]
+  bookmarks             Bookmark[]
+
+  username           String  @unique
+  email              String  @unique
+  hashedPassword     String
+  hashedRefreshToken String?
+  role               Role?   @default(ADMIN)
+  isVerified         Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model UserVerificationToken {
+  id Int @id @default(autoincrement())
+
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id])
+
+  expires     DateTime
+  hashedToken String
+}
+
+model ChangePasswordToken {
+  id Int @id @default(autoincrement())
+
+  userId Int  @unique
+  user   User @relation(fields: [userId], references: [id])
+
+  expires     DateTime
+  hashedToken String
+}
+
+model TempatMakan {
+  id Int @id @default(autoincrement())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  menus      Menu[]
+  categories Category[]
+  reviews    Review[]
+  bookmarks  Bookmark[]
+
+  name           String
+  description    String?
+  imageUrl       String?
+  address        String?
+  latitude       Float?
+  longitude      Float?
+  timeOpen       Int?
+  timeClose      Int?
+  distance       Float?
+  rating         Float?
+  paymentMethods Json?
+  platform       Json?
+  campus         Campus
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Menu {
+  id Int @id @default(autoincrement())
+
+  tempatMakanId Int
+  tempatMakan   TempatMakan @relation(fields: [tempatMakanId], references: [id])
+
+  name        String
+  thumbnail   String?
+  description String?
+  price       Int?
+  like        Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id Int @id @default(autoincrement())
+
+  tempatMakan TempatMakan[]
+
+  name        String
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Review {
+  id Int @id @default(autoincrement())
+
+  userId        Int
+  user          User        @relation(fields: [userId], references: [id])
+  tempatMakanId Int
+  tempatMakan   TempatMakan @relation(fields: [tempatMakanId], references: [id])
+
+  content String
+  rating  Float?
+
+  createdAt DateTime @default(now())
+}
+
+model Bookmark {
+  id Int @id @default(autoincrement())
+
+  userId        Int
+  user          User        @relation(fields: [userId], references: [id])
+  tempatMakanId Int
+  tempatMakan   TempatMakan @relation(fields: [tempatMakanId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum Campus {
+  GANESHA
+  JATINANGOR
+}
