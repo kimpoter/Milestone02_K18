@@ -41,5 +41,7 @@ export class TempatMakanService {
   }
 
   // Delete tempat makan
-  // async deleteTempatMakan() { }
+  async deleteTempatMakan() {
+    const test = 1
+  }
 }
