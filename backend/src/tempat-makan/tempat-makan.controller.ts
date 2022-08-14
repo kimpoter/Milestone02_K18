@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { Public } from 'src/common/decorators';
-import { CreateTempatMakanDto, DeleteTempatMakanDto, UpdateTempatMakanDto } from './dto';
+import { CreateTempatMakanDto, UpdateTempatMakanDto } from './dto';
 import { TempatMakanService } from './tempat-makan.service';
 
 @Controller('tempat-makan')
@@ -9,9 +9,16 @@ export class TempatMakanController {
 
   // Get all tempatMakan
   @Public()
-  @Get('/:campus?')
+  @Get('/campus/:campus?')
   getAllTempatMakan(@Param() param, @Query() query) {
     return this.tempatMakanService.getAllTempatMakan(param, query)
+  }
+
+  // Get single tempatMakan
+  @Public()
+  @Get('/:id')
+  getSingleTempatMakan(@Param('id') id: number) {
+    return this.tempatMakanService.getSingleTempatmakan(+id)
   }
 
   // Create tempatMakan
@@ -23,16 +30,16 @@ export class TempatMakanController {
 
   // Update tempatMakan
   @Public()
-  @Put()
-  updateTempatMakan(@Body() dto: UpdateTempatMakanDto) {
-    return this.tempatMakanService.updatTempatMakan(dto)
+  @Put(':id')
+  updateTempatMakan(@Body() dto: UpdateTempatMakanDto, @Param('id') id: number) {
+    return this.tempatMakanService.updateTempatMakan(dto, +id)
   }
 
   // Delete tempatMakan
   @Public()
-  @Delete()
-  deleteTempatMakan(@Body() dto: DeleteTempatMakanDto) {
-    return this.tempatMakanService.deleteTempatMakan(dto)
+  @Delete(':id')
+  deleteTempatMakan(@Param('id') id: number) {
+    return this.tempatMakanService.deleteTempatMakan(+id)
   }
 
 }

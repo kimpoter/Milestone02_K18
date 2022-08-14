@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { DeleteTempatMakanDto, CreateTempatMakanDto, UpdateTempatMakanDto } from './dto';
+import { CreateTempatMakanDto, UpdateTempatMakanDto } from './dto';
 
 @Injectable()
 export class TempatMakanService {
@@ -166,7 +166,53 @@ export class TempatMakanService {
     }
   }
 
-  // Create tempat makan
+  // Get single tempatMakan
+  async getSingleTempatmakan(tempatMakanId: number) {
+    const dataTempatMakan = await this.prisma.tempatMakan.findUnique({
+      where: {
+        id: tempatMakanId
+      },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        imageUrl: true,
+        price: true,
+        address: true,
+        latitude: true,
+        longitude: true,
+        timeOpen: true,
+        timeClose: true,
+        distance: true,
+        rating: true,
+        campus: true,
+        createdAt: true,
+        updatedAt: true,
+        categories: {
+          select: {
+            name: true
+          }
+        },
+        paymentMethods: {
+          select: {
+            name: true,
+          }
+        },
+        platforms: {
+          select: {
+            name: true
+          }
+        }
+      }
+    })
+
+    return {
+      status: 'success',
+      data: dataTempatMakan
+    }
+  }
+
+  // Create tempatMakan
   async createTempatMakan(dto: CreateTempatMakanDto) {
     // Formatting category data
     const categoriesArray = dto.category ? dto.category.split(';') : undefined
@@ -242,7 +288,7 @@ export class TempatMakanService {
   }
 
   // Update tempatMakan
-  async updatTempatMakan(dto: UpdateTempatMakanDto) {
+  async updateTempatMakan(dto: UpdateTempatMakanDto, tempatMakanId: number) {
     // Formatting category data
     const categoriesArray = dto.category ? dto.category.split(';') : undefined
     let categoryData
@@ -283,7 +329,7 @@ export class TempatMakanService {
     try {
       await this.prisma.tempatMakan.update({
         where: {
-          id: dto.tempatMakanId
+          id: tempatMakanId
         },
         data: {
           name: dto.name,
@@ -320,11 +366,11 @@ export class TempatMakanService {
   }
 
   // Delete tempatMakan
-  async deleteTempatMakan(dto: DeleteTempatMakanDto) {
+  async deleteTempatMakan(tempatMakanId: number) {
     try {
       await this.prisma.tempatMakan.delete({
         where: {
-          id: dto.tempatMakanId
+          id: tempatMakanId
         }
       })
     } catch (error) {
