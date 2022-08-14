@@ -6,6 +6,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import PlaceDetailPage from "./pages/PlaceDetailPage";
+import BookmarkPage from "./pages/BookmarkPage";
 
 function App() {
   const [ dropdownState, setDropdownState ] = useState(false);
@@ -26,6 +27,7 @@ function App() {
           <Route exact path="/place-detail/:id" element={<PlaceDetailPage />} />
           <Route exact path="/signin" element={<SignInPage />} />
           <Route exact path="/signup" element={<SignUpPage />} />
+          <Route exact path="/bookmark" element={<BookmarkPage />} />
         </Routes>
       </div>
     </div>
