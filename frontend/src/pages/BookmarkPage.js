@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import { PreviewCard } from "../components/PlaceCard";
+// import { PreviewCard } from "../components/PlaceCard";
+import PlaceDisplay from "../components/PlaceDisplay";
 
 export default function BookmarkPage() {
     const [ filterDisplay, setFilterDisplay ] = useState(false);
@@ -39,9 +40,23 @@ export default function BookmarkPage() {
 
             {/* Main Bookmark */}
             <div className="bg-[#EFEFEF] w-full p-8 rounded-3xl">
-                <h1 className='ml-16'>
+                <h1 className='ml-16 my-3'>
                     Bookmark
                 </h1>
+                <div className="flex flex-wrap justify-center  w-full">
+                    <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
+                    <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
+                    <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
+                    <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
+                    <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
+                    <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
+                    <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
+                    <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
+                    <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
+                    <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
+                    <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
+                    <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
+                </div>
             </div>
         </div>
     );  
