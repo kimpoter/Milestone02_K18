@@ -91,7 +91,7 @@ export class TempatMakanService {
         AND: [
           {
             categories: {
-              some: {
+              [categoryArray ? 'some' : 'every']: {
                 name: {
                   in: categoryArray,
                   mode: 'insensitive'
@@ -107,7 +107,7 @@ export class TempatMakanService {
           },
           {
             platforms: {
-              some: {
+              [platformArray ? 'some' : 'every']: {
                 name: {
                   in: platformArray,
                   mode: 'insensitive'
@@ -117,7 +117,7 @@ export class TempatMakanService {
           },
           {
             paymentMethods: {
-              some: {
+              [paymentArray ? 'some' : 'every']: {
                 name: {
                   in: paymentArray,
                   mode: 'insensitive'
@@ -159,6 +159,8 @@ export class TempatMakanService {
         }
       }
     })
+
+    // const dataAllTempatMakan = await this.prisma.tempatMakan.findMany()
 
     return { dataAllTempatMakan, categoryArray, priceArray, platformArray, paymentArray, searchString }
   }
