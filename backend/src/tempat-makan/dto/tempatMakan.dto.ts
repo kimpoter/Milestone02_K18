@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsNumber, IsObject, IsString } from 'class-validator'
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator'
 
 export class TempatMakanDto {
   @IsNotEmpty()
@@ -10,6 +10,13 @@ export class TempatMakanDto {
 
   @IsString()
   imageUrl: string
+
+  @IsNotEmpty()
+  @IsNumber()
+  price: number
+
+  @IsString()
+  category: string
 
   @IsNotEmpty()
   @IsString()
@@ -38,9 +45,9 @@ export class TempatMakanDto {
   @IsNumber()
   rating: number
 
-  @IsObject()
-  platform: Record<string, boolean>
+  @IsString()
+  platform: string
 
-  @IsObject()
-  paymentMethods: Record<string, boolean>
+  @IsString()
+  paymentMethod: string
 }

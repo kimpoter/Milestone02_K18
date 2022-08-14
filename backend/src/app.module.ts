@@ -8,9 +8,10 @@ import { BookmarkModule } from './bookmark/bookmark.module';
 import { ReviewModule } from './review/review.module';
 import { MenuModule } from './menu/menu.module';
 import { CategoryModule } from './category/category.module';
+import { UploadModule } from './upload/upload.module';
 
 @Module({
-  imports: [AuthModule, PrismaModule, TempatMakanModule, BookmarkModule, ReviewModule, MenuModule, CategoryModule],
+  imports: [AuthModule, PrismaModule, TempatMakanModule, BookmarkModule, ReviewModule, MenuModule, CategoryModule, UploadModule],
   providers: [
     {
       provide: APP_GUARD,

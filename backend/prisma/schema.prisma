@@ -56,24 +56,25 @@ model TempatMakan {
   userId Int
   user   User @relation(fields: [userId], references: [id])
 
-  menus      Menu[]
-  categories Category[]
-  reviews    Review[]
-  bookmarks  Bookmark[]
+  menus          Menu[]
+  categories     Category[]
+  paymentMethods PaymentMethod[]
+  platforms      Platform[]
+  reviews        Review[]
+  bookmarks      Bookmark[]
 
-  name           String
-  description    String?
-  imageUrl       String?
-  address        String?
-  latitude       Float?
-  longitude      Float?
-  timeOpen       Int?
-  timeClose      Int?
-  distance       Float?
-  rating         Float?
-  paymentMethods Json?
-  platform       Json?
-  campus         Campus
+  name        String
+  description String?
+  imageUrl    String?
+  price       Int
+  address     String?
+  latitude    Float?
+  longitude   Float?
+  timeOpen    Int?
+  timeClose   Int?
+  distance    Float?
+  rating      Float?
+  campus      Campus
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -100,8 +101,29 @@ model Category {
 
   tempatMakan TempatMakan[]
 
-  name        String
-  description String?
+  name String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PaymentMethod {
+  id Int @id @default(autoincrement())
+
+  tempatMakan TempatMakan[]
+
+  name String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Platform {
+  id Int @id @default(autoincrement())
+
+  tempatMakan TempatMakan[]
+
+  name String @unique
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
