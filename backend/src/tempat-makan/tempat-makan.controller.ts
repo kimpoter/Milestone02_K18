@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
 import { Public } from 'src/common/decorators';
 import { TempatMakanDto } from './dto';
 import { TempatMakanService } from './tempat-makan.service';
@@ -9,14 +9,14 @@ export class TempatMakanController {
 
   // Get all tempat makan
   @Public()
-  @Get(':id')
-  getAllTempatMakan() {
-    return this.tempatMakanService.getAllTempatMakan()
+  @Get('/:campus?')
+  getAllTempatMakan(@Param() param, @Query() query) {
+    return this.tempatMakanService.getAllTempatMakan(param, query)
   }
 
   // Create tempat makan
   @Public()
-  @Post('kambing')
+  @Post()
   createTempatMakan(@Body() dto: TempatMakanDto) {
     return this.tempatMakanService.createTempatMakan(dto)
   }
@@ -27,4 +27,5 @@ export class TempatMakanController {
   deleteTempatMakan() {
     // return this.tempatMakanService.deleteTempatMakan()
   }
+
 }
