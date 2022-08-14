@@ -107,9 +107,3 @@ export class UpdateTempatMakanDto {
   @IsString()
   paymentMethod: string
 }
-
-export class DeleteTempatMakanDto {
-  @IsNotEmpty()
-  @IsNumber()
-  tempatMakanId: number
-}
