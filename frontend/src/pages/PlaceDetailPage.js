@@ -9,63 +9,56 @@ function PlaceDetailPage() {
   const { id } = useParams();
   const [placeData, setPlaceData] = useState(null);
   const [modalState, setModalState] = useState({ url: null });
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:8000/tempatMakan") // ini nanti harusnya ada url yang bakal langsung nge fetch data tempat makan sesuai id nya
+    setLoading(true);
+    fetch(`${process.env.REACT_APP_SERVER_URL}/tempat-makan/${id}`) // ini nanti harusnya ada url yang bakal langsung nge fetch data tempat makan sesuai id nya
       .then((res) => {
         return res.json();
       })
-      .then((data) => {
-        data.forEach((element) => {
-          if (element.id == id) {
-            setPlaceData(element);
-            return;
-          }
-        });
-      });
-  }, []);
+      .then((res) => {
+        console.log(res);
+
+        if (res.status === "success") {
+          setPlaceData(res.data);
+        } else {
+          window.alert(res.status);
+        }
+      })
+      .finally(() => setLoading(true));
+  }, [id]);
 
   return (
     <>
       {placeData && (
         <div>
           <div className="mt-12">
-            <DetailCard
-              place={placeData}
-              category={["Fast Food", "Ayam", "Sapi", "Burger"]} // masih hard code, nanti ganti
-            />
+            <DetailCard place={placeData} />
           </div>
           <div className="flex flex-row space-x-20 mt-8">
             <div className="space-y-2">
               <h2>Cara Pembayaran</h2>
               <div className="flex flex-row space-x-2">
-                {Object.keys(placeData.paymentMethods).map((method, index) => {
-                  if (placeData.paymentMethods[method]) {
-                    return (
-                      <div key={index} className="chips-secondary">
-                        {method}
-                      </div>
-                    );
-                  } else {
-                    return <></>;
-                  }
-                })}
+                {placeData.paymentMethods ? (
+                  placeData.paymentMethods.forEach((method) => {
+                    return <div className="chips-secondary">{method}</div>;
+                  })
+                ) : (
+                  <div>Tidak ada data</div>
+                )}
               </div>
             </div>
             <div className="space-y-2">
               <h2>Platform Pembelian</h2>
               <div className="flex flex-row space-x-2">
-                {Object.keys(placeData.platform).map((item, index) => {
-                  if (placeData.platform[item]) {
-                    return (
-                      <div key={index} className="chips-secondary">
-                        {item}
-                      </div>
-                    );
-                  } else {
-                    return <></>;
-                  }
-                })}
+                {placeData.platforms ? (
+                  placeData.platforms.forEach((platform) => {
+                    return <div className="chips-secondary">{platform}</div>;
+                  })
+                ) : (
+                  <div>Tidak ada data</div>
+                )}
               </div>
             </div>
           </div>
@@ -90,11 +83,11 @@ function PlaceDetailPage() {
               <MenuContainer menuImageUrl="http://infohargamenu.com/wp-content/uploads/2017/11/Menu-Reguler-McD.jpg" />
             </button>
           </div>
-          <div className="flex flex-col gap-3 mt-8 space-y-2">
+          {/*<div className="flex flex-col gap-3 mt-8 space-y-2">
             <h2>Review</h2>
-            <ReviewForm/>
-            <ReviewDisplay id={id}/>
-          </div>
+            <ReviewForm />
+            <ReviewDisplay id={id} />
+          </div>*/}
         </div>
       )}
     </>
