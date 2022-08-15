@@ -6,7 +6,8 @@ import ScrollToTop from "./components/ScrollToTop";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import PlaceDetailPage from "./pages/PlaceDetailPage";
-import BookmarkPage from "./pages/BookmarkPage";
+import BookmarkPage from "./pages/BookmarkPage"
+import SearchResult from "./pages/SearchResult";
 import UserSettingPage from "./pages/UserSettingPage";
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
           <Route exact path="/signin" element={<SignInPage />} />
           <Route exact path="/signup" element={<SignUpPage />} />
           <Route exact path="/bookmark" element={<BookmarkPage />} />
+          <Route exact path="/searchresult" element={<SearchResult />} />
           <Route exact path="/user/setting" element={<UserSettingPage/>} />
         </Routes>
       </div>
