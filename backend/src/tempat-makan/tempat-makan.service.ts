@@ -7,7 +7,8 @@ export class TempatMakanService {
   constructor(private prisma: PrismaService) { }
 
   // Get all tempat makan
-  async getAllTempatMakan(param, query) {
+  async getAllTempatMakan(param, query) 
+  {
     // Filter by category
     let categoryArray
     if (query.filter_category) {
@@ -170,7 +171,7 @@ export class TempatMakanService {
   async getSingleTempatmakan(tempatMakanId: number) {
     const dataTempatMakan = await this.prisma.tempatMakan.findUnique({
       where: {
-        id: tempatMakanId
+        id: tempatMakanId   
       },
       select: {
         id: true,
