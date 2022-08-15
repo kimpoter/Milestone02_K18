@@ -9,6 +9,6 @@ export class CreateReview {
   @IsString()
   content: string;
 
-  @IsString()
-  rating: string
+  @IsNumber()
+  rating: number;
 }
