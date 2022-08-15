@@ -7,7 +7,7 @@ import { CreateReview } from './dto';
 export class ReviewService {
   constructor(private prisma: PrismaService) { }
 
-  // Get all tempat makan
+  // Get Review
   async getReview(id) {
     const dataReview = await this.prisma.review.findMany({
       where: {tempatMakanId : id }});
@@ -20,7 +20,7 @@ export class ReviewService {
   }
 
 
-  // Create tempatMakan
+  // Create Review
   async createReview(dto: CreateReview) {
     
 
@@ -44,7 +44,7 @@ export class ReviewService {
   }
 
  
-  // Delete tempatMakan
+  // Delete Review
   async deleteReview(tempatMakanId: number) {
     try {
       await this.prisma.review.delete({
