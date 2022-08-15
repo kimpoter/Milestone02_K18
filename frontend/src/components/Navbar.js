@@ -6,7 +6,7 @@ function Navbar(props) {
     const [ selected, setSelected ] = useState('Ganesha');
 
     return (
-        <div className="fixed w-screen bg-white flex justify-between items-center text-primary pl-12 py-4 shadow-[0_21px_52px_0_rgba(0,0,0,0.1)]">
+        <div className="fixed w-screen bg-white flex justify-between items-center text-primary pl-12 py-4 shadow-[0_21px_52px_0_rgba(0,0,0,0.1)] z-10">
             <div className="flex items-center space-x-4">
                 <img src='logo.svg' className="w-[24px]" alt='ITBFood logo' />
                 <Link to='/' className="font-semibold text-2xl">ITBFood</Link>

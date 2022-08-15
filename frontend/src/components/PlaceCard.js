@@ -21,7 +21,7 @@ function Rating({ rating, position }) {
 
 export function PreviewCard({ place, category }) {
     return (
-        <div className="mx-2 shadow-xl  bg-white px-4 py-4 mt-8 sm:w-[270px] w-[200px] sm:min-h-[270px] min-h-[200px] rounded-3xl relative hover:cursor-pointer">
+        <div className="hover:scale-105 hover:-translate-y-100px duration-300 mx-2 shadow-xl  bg-white px-4 py-4 mt-8 sm:w-[270px] w-[200px] sm:min-h-[270px] min-h-[200px] rounded-3xl relative hover:cursor-pointer">
             <img src={place.imageUrl ? place.imageUrl : "placeholder.jpg"} alt="placeholder" className="rounded-xl aspect-[4/3] object-cover" />
             <Rating position={"absolute top-6 right-6 z-1"} rating={place.rating}/>
             <h2 className="mt-4">{place.name}</h2>

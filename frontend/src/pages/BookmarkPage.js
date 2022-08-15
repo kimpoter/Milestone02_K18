@@ -39,11 +39,35 @@ export default function BookmarkPage() {
             </div>
 
             {/* Main Bookmark */}
-            <div className="bg-[#EFEFEF] w-full p-8 rounded-3xl">
-                <h1 className='ml-16 my-3'>
+            <div className="bg-[#EFEFEF] w-full p-8 pb-20 rounded-3xl">
+                <div className="flow-root">
+                    <div className="float-left ml-32 mt-10">
+                        <h1>Bookmark</h1>
+                    </div>
+                    <div className="float-right mr-32 mt-10 ">
+                        <button className="btn-primary rounded-2xl px-8 py-2 flex items-center">
+                            <h3>Sort</h3>
+                            <img src='sort.svg' className="ml-3 w-[16px]" alt='sort logo' />
+                        </button>
+                    </div> 
+                    
+                </div>
+                {/* <h1 className='ml-16 my-3'>
                     Bookmark
-                </h1>
-                <div className="flex flex-wrap justify-center  w-full">
+                </h1> */}
+                <div className="flex flex-wrap justify-center w-full">
+                    <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
+                    <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
+                    <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
+                    <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
+                    <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
+                    <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
+                    <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
+                    <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
+                    <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
+                    <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
+                    <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
+                    <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
                     <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
                     <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
                     <PlaceDisplay place_data_url='http://localhost:8000/tempatMakan' />
