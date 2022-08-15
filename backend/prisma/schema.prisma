@@ -86,11 +86,8 @@ model Menu {
   tempatMakanId Int
   tempatMakan   TempatMakan @relation(fields: [tempatMakanId], references: [id])
 
-  name        String
-  thumbnail   String?
+  imageUrl    String?
   description String?
-  price       Int?
-  like        Int?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

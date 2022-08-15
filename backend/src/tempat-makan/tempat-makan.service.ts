@@ -1,14 +1,14 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { TempatMakanDto } from './dto';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+import { CreateTempatMakanDto, UpdateTempatMakanDto } from './dto';
 
 @Injectable()
 export class TempatMakanService {
   constructor(private prisma: PrismaService) { }
 
   // Get all tempat makan
-  async getAllTempatMakan(param, query) {
+  async getAllTempatMakan(param, query) 
+  {
     // Filter by category
     let categoryArray
     if (query.filter_category) {
@@ -67,7 +67,7 @@ export class TempatMakanService {
         OR: [
           {
             name: {
-              contains: searchString,
+              contains: searchString ?? '',
               mode: 'insensitive'
             }
           },
@@ -75,7 +75,7 @@ export class TempatMakanService {
             categories: {
               some: {
                 name: {
-                  contains: searchString,
+                  contains: searchString ?? '',
                   mode: 'insensitive'
                 }
               }
@@ -83,7 +83,7 @@ export class TempatMakanService {
           },
           {
             description: {
-              contains: searchString,
+              contains: searchString ?? '',
               mode: 'insensitive'
             }
           }
@@ -91,7 +91,7 @@ export class TempatMakanService {
         AND: [
           {
             categories: {
-              some: {
+              [categoryArray ? 'some' : 'every']: {
                 name: {
                   in: categoryArray,
                   mode: 'insensitive'
@@ -107,7 +107,7 @@ export class TempatMakanService {
           },
           {
             platforms: {
-              some: {
+              [platformArray ? 'some' : 'every']: {
                 name: {
                   in: platformArray,
                   mode: 'insensitive'
@@ -117,7 +117,7 @@ export class TempatMakanService {
           },
           {
             paymentMethods: {
-              some: {
+              [paymentArray ? 'some' : 'every']: {
                 name: {
                   in: paymentArray,
                   mode: 'insensitive'
@@ -128,6 +128,7 @@ export class TempatMakanService {
         ],
       },
       select: {
+        id: true,
         name: true,
         description: true,
         imageUrl: true,
@@ -160,11 +161,60 @@ export class TempatMakanService {
       }
     })
 
-    return { dataAllTempatMakan, categoryArray, priceArray, platformArray, paymentArray, searchString }
+    return {
+      status: 'success',
+      data: dataAllTempatMakan
+    }
   }
 
-  // Create tempat makan
-  async createTempatMakan(dto: TempatMakanDto) {
+  // Get single tempatMakan
+  async getSingleTempatmakan(tempatMakanId: number) {
+    const dataTempatMakan = await this.prisma.tempatMakan.findUnique({
+      where: {
+        id: tempatMakanId   
+      },
+      select: {
+        id: true,
+        name: true,
+        description: true,
+        imageUrl: true,
+        price: true,
+        address: true,
+        latitude: true,
+        longitude: true,
+        timeOpen: true,
+        timeClose: true,
+        distance: true,
+        rating: true,
+        campus: true,
+        createdAt: true,
+        updatedAt: true,
+        categories: {
+          select: {
+            name: true
+          }
+        },
+        paymentMethods: {
+          select: {
+            name: true,
+          }
+        },
+        platforms: {
+          select: {
+            name: true
+          }
+        }
+      }
+    })
+
+    return {
+      status: 'success',
+      data: dataTempatMakan
+    }
+  }
+
+  // Create tempatMakan
+  async createTempatMakan(dto: CreateTempatMakanDto) {
     // Formatting category data
     const categoriesArray = dto.category ? dto.category.split(';') : undefined
     let categoryData
@@ -203,7 +253,7 @@ export class TempatMakanService {
 
     // Save tmepat makan data to the database
     try {
-      const resultCreateTempatMakan = await this.prisma.tempatMakan.create({
+      await this.prisma.tempatMakan.create({
         data: {
           name: dto.name,
           description: dto.description,
@@ -228,48 +278,110 @@ export class TempatMakanService {
           },
           userId: 1
         },
-        select: {
-          name: true,
-          description: true,
-          imageUrl: true,
-          price: true,
-          address: true,
-          latitude: true,
-          longitude: true,
-          timeOpen: true,
-          timeClose: true,
-          distance: true,
-          rating: true,
-          campus: true,
-          createdAt: true,
-          updatedAt: true,
-          categories: {
-            select: {
-              name: true
-            }
-          },
-          paymentMethods: {
-            select: {
-              name: true,
-            }
-          },
-          platforms: {
-            select: {
-              name: true
-            }
-          }
-        }
       })
-      return resultCreateTempatMakan
     } catch (error) {
-      return error
+      throw new InternalServerErrorException(error)
     }
-    // return categoryData
+    return {
+      status: 'success',
+      message: 'Tempat Makan has been created'
+    }
   }
 
-  // Delete tempat makan
-  async deleteTempatMakan() {
-    //
+  // Update tempatMakan
+  async updateTempatMakan(dto: UpdateTempatMakanDto, tempatMakanId: number) {
+    // Formatting category data
+    const categoriesArray = dto.category ? dto.category.split(';') : undefined
+    let categoryData
+    if (categoriesArray) {
+      categoryData = []
+      categoriesArray.map((category: string) => {
+        categoryData.push({
+          name: category.trim().toLowerCase()
+        })
+      })
+    }
+
+    // Formatting platform data
+    const platformsArray = dto.platform ? dto.platform.split(';') : undefined
+    let platformData
+    if (platformsArray) {
+      platformData = []
+      platformsArray.map((platform: string) => {
+        platformData.push({
+          name: platform.trim().toLowerCase()
+        })
+      })
+    }
+
+    // Formatting paymentMethod data
+    const paymentMethodsArray = dto.paymentMethod ? dto.paymentMethod.split(';') : undefined
+    let paymentMethodData
+    if (paymentMethodsArray) {
+      paymentMethodData = []
+      paymentMethodsArray.map((paymentMethod: string) => {
+        paymentMethodData.push({
+          name: paymentMethod.trim().toLowerCase()
+        })
+      })
+    }
+
+    // Save tmepat makan data to the database
+    try {
+      await this.prisma.tempatMakan.update({
+        where: {
+          id: tempatMakanId
+        },
+        data: {
+          name: dto.name,
+          description: dto.description,
+          imageUrl: dto.imageUrl,
+          price: dto.price,
+          campus: dto.campus,
+          address: dto.address,
+          latitude: dto.latitude,
+          longitude: dto.longitude,
+          timeOpen: dto.timeOpen,
+          timeClose: dto.timeClose,
+          distance: dto.distance,
+          rating: dto.rating,
+          categories: {
+            connect: categoryData
+          },
+          paymentMethods: {
+            connect: paymentMethodData
+          },
+          platforms: {
+            connect: platformData
+          },
+          userId: 1
+        },
+      })
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
+    return {
+      status: 'success',
+      message: 'Tempat Makan has been updated'
+    }
+  }
+
+  // Delete tempatMakan
+  async deleteTempatMakan(tempatMakanId: number) {
+    try {
+      await this.prisma.tempatMakan.delete({
+        where: {
+          id: tempatMakanId
+        }
+      })
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
+
+    return {
+      status: 'success',
+      message: 'Tempat Makan has been deleted'
+    }
   }
 
 }
