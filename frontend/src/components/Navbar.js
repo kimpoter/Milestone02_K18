@@ -2,9 +2,11 @@ import { FaUserCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 import AuthContext from "../AuthContext";
+import CampusContext from "../CampusContext";
 
 function Navbar(props) {
   const { currentUser, setCurrentUser } = useContext(AuthContext);
+  const { campus, setCampus } = useContext(CampusContext);
 
   function logOut() {
     setCurrentUser({ loggedIn: false });
@@ -20,19 +22,19 @@ function Navbar(props) {
       <div className="flex items-center relative space-x-4 bg-greyscale rounded-l-[36px] pl-6 pr-12 py-4">
         <ul className="flex rounded-[69px] bg-white shadow-[0_0_4px_0_rgba(0,0,0,0.25)] px-1 py-1">
           <button
-            onClick={() => props.setCampus("GANESHA")}
+            onClick={() => setCampus("GANESHA")}
             className={
               "px-6 py-1 rounded-[69px] " +
-              (props.campus === "GANESHA" && "bg-secondary text-white")
+              (campus === "GANESHA" && "bg-secondary text-white")
             }
           >
             Ganesha
           </button>
           <button
-            onClick={() => props.setCampus("JATINANGOR")}
+            onClick={() => setCampus("JATINANGOR")}
             className={
               "px-6 py-1 rounded-[69px] " +
-              (props.campus === "JATINANGOR" && "bg-secondary text-white")
+              (campus === "JATINANGOR" && "bg-secondary text-white")
             }
           >
             Jatinangor
