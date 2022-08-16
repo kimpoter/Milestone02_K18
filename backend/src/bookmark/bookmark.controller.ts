@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Query } from '@nestjs/common';
 import { GetCurrentUserId, Public } from 'src/common/decorators';
 import { BookmarkService } from './bookmark.service';
 import { CreateBookmarkDto } from './dto';
@@ -8,9 +8,9 @@ export class BookmarkController {
   constructor(private bookmarkService: BookmarkService) { }
 
   // Get all Bookmark
-  @Get()
-  getAllBookmark(@GetCurrentUserId() userId: number) {
-    return this.bookmarkService.getAllBookmark(+userId)
+  @Get('?')
+  getAllBookmark(@GetCurrentUserId() userId: number, @Query() query) {
+    return this.bookmarkService.getAllBookmark(+userId, query)
   }
 
   // Create Bookmark
