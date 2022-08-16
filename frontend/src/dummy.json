@@ -1,166 +1,181 @@
 {
-    "tempatMakan": [{
-          "id": 0,
-          "userId": 0,
-          "name": "Mc Donald's Dago",
-          "description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et",
-          "address": "Coblong",
-          "addressLink": "https://goo.gl/maps/sQTNk6Ruu6FtTvvv7",
-          "timeOpen": "06:00:00+07",
-          "timeClose": "10:00:00+07",
-          "campus": "GANESHA",
-          "imageUrl": "https://ik.imagekit.io/tvlk/cul-asset/guys1L+Yyer9kzI3sp-pb0CG1j2bhflZGFUZOoIf1YOBAm37kEUOKR41ieUZm7ZJ/cul-assets-252301483284-b172d73b6c43cddb/culinary/asset/REST_202-960x720-FIT_AND_TRIM-0c37ead142522a3fddf48d14238d2a2d.jpeg?tr=q-40,w-300,h-300&amp;_src=imagekit",
-          "distance": 550,
-          "rating": 4.4,
-          "paymentMethods": {
-            "cash": true,
-            "ovo": true,
-            "gopay": false,
-            "shopeePay": false,
-            "dana": false,
-            "transfer": true
-          },
-          "platform": {
-            "langsung": true,
-            "shopeeFood": true,
-            "goFood": true,
-            "grabFood": true
-          },
-          "createdAt": "2022-08-06 09:23:26+07",
-          "updatedAt": "2022-08-06 09:23:26+07"
-    }],
-    "category": [
-        {
-          "id": 0,
-          "name": "Ayam",
-          "createdAt": "2022-07-06 09:23:26+07",
-          "updatedAt": "2022-08-06 09:23:26+07"
-        },
-        {
-          "id": 1,
-          "name": "Seafood",
-          "createdAt": "2022-07-06 09:23:26+07",
-          "updatedAt": "2022-08-06 09:23:26+07"
-        },
-        {
-          "id": 2,
-          "name": "Fast Food",
-          "createdAt": "2022-07-06 09:23:26+07",
-          "updatedAt": "2022-08-06 09:23:26+07"
-        },
-        {
-          "id": 3,
-          "name": "Sapi",
-          "createdAt": "2022-07-06 09:23:26+07",
-          "updatedAt": "2022-08-06 09:23:26+07"
-        }
-    ],
-    "tempatMakan_Category": [
-        {
-          "tempatMakanId": 0,
-          "categoryId": 0
-        },
-        {
-          "tempatMakanId": 0,
-          "categoryId": 2
-        },
-        {
-          "tempatMakanId": 0,
-          "categoryId": 3
-        }
-     ],
-    "menu": [
-        {
-          "id": 0,
-          "tempatMakanId": 0,
-          "name": "PaNas Hebat Smoky BBQ Wings",
-          "thumbnail": "https://i.gojekapi.com/darkroom/gofood-indonesia/v2/images/uploads/387b2081-fa1f-41da-97eb-d67cca111349_TPO-112071.jpg?h=516&w=516&fit=crop&auto=compress",
-          "description": "Sayap Ayam, Nasi, Omelet, Fruit Tea x1",
-          "price": 30500,
-          "like": 20,
-          "createdAt": "2022-07-06 09:23:26+07",
-          "updatedAt": "2022-07-06 09:23:26+07"
-        },
-        {
-          "id": 1,
-          "tempatMakanId": 0,
-          "name": "Soda Gembira Float",
-          "thumbnail": "https://i.gojekapi.com/darkroom/gofood-indonesia/v2/images/uploads/d4d4ef08-cc4c-4add-b561-46a2f0eecf55_TPO-184094_1.jpg?h=516&w=516&fit=crop&auto=compress",
-          "description": "Soda Gembira",
-          "price": 17500,
-          "like": 12,
-          "createdAt": "2022-07-06 09:23:26+07",
-          "updatedAt": "2022-07-06 09:23:26+07"
-        }
-    ],
-    "review": [
-        {
-          "id": 0,
-          "userId": 0,
-          "tempatMakanId": 0,
-          "content": "Mantap bro",
-          "rating": 4,
-          "createdAt": "2022-08-06 09:23:26+07"
-        },
-        {
-          "id": 0,
-          "userId": 1,
-          "tempatMakanId": 0,
-          "content": "Mantap sekali tapi mahal",
-          "rating": 4,
-          "createdAt": "2022-08-06 09:25:26+07"
-        }
-    ],
-    "bookmark": [
-        {
-          "id": 0,
-          "userId": 0,
-          "tempatMakanId": 0,
-          "createdAt": "2022-08-06 09:25:22+07"
-        }
-    ],
-    "user": [
-        {
-          "id": 0,
-          "username": "kurumi",
-          "email": "tokisakikurumi@gmail.com",
-          "role": "USER",
-          "isVerified": true,
-          "createdAt": "2022-08-06 09:23:26+07",
-          "updatedAt": "2022-08-06 09:23:26+07"
-        },
-        {
-          "id": 1,
-          "username": "tohka",
-          "email": "yatogamitohka@gmail.com",
-          "role": "USER",
-          "isVerified": true,
-          "createdAt": "2022-08-06 09:23:26+07",
-          "updatedAt": "2022-08-06 09:23:26+07"
-        }
-    ],
-    "userVerificationToken": [
-        {
-          "id": 0,
-          "userId": 0,
-          "expires": "2022-08-15 09:23:26+07"
-        },
-        {
-          "id": 1,
-          "userId": 1,
-          "expires": "2022-08-15 09:23:26+07"
-        }
-    ],
-    "changePasswordToken": [
-        {
-          "id": 0,
-          "userId": 0,
-          "expires": "2022-08-12 09:23:26+07"
-        },
-        {
-          "id": 1,
-          "userId": 1,
-          "expires": "2022-08-12 09:23:26+07"
-        }
-    ]
+  "tempatMakan": [
+    {
+      "id": 0,
+      "userId": 0,
+      "name": "Mc Donald's Dago",
+      "description": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et",
+      "address": "Coblong",
+      "addressLink": "https://goo.gl/maps/sQTNk6Ruu6FtTvvv7",
+      "timeOpen": "2022-08-06 06:00:00+07",
+      "timeClose": "2022-08-06 10:00:00+07",
+      "campus": "GANESHA",
+      "imageUrl": "https://ik.imagekit.io/tvlk/cul-asset/guys1L+Yyer9kzI3sp-pb0CG1j2bhflZGFUZOoIf1YOBAm37kEUOKR41ieUZm7ZJ/cul-assets-252301483284-b172d73b6c43cddb/culinary/asset/REST_202-960x720-FIT_AND_TRIM-0c37ead142522a3fddf48d14238d2a2d.jpeg?tr=q-40,w-300,h-300&amp;_src=imagekit",
+      "distance": 550,
+      "rating": 4.4,
+      "paymentMethods": {
+        "cash": true,
+        "ovo": true,
+        "gopay": false,
+        "shopeePay": false,
+        "dana": false,
+        "transfer": true
+      },
+      "platform": {
+        "langsung": true,
+        "shopeeFood": true,
+        "goFood": true,
+        "grabFood": true
+      },
+      "createdAt": "2022-08-06 09:23:26+07",
+      "updatedAt": "2022-08-06 09:23:26+07"
+    }
+  ],
+  "category": [
+    {
+      "id": 0,
+      "name": "Ayam",
+      "createdAt": "2022-07-06 09:23:26+07",
+      "updatedAt": "2022-08-06 09:23:26+07"
+    },
+    {
+      "id": 1,
+      "name": "Seafood",
+      "createdAt": "2022-07-06 09:23:26+07",
+      "updatedAt": "2022-08-06 09:23:26+07"
+    },
+    {
+      "id": 2,
+      "name": "Fast Food",
+      "createdAt": "2022-07-06 09:23:26+07",
+      "updatedAt": "2022-08-06 09:23:26+07"
+    },
+    {
+      "id": 3,
+      "name": "Sapi",
+      "createdAt": "2022-07-06 09:23:26+07",
+      "updatedAt": "2022-08-06 09:23:26+07"
+    }
+  ],
+  "tempatMakan_Category": [
+    {
+      "tempatMakanId": 0,
+      "categoryId": 0
+    },
+    {
+      "tempatMakanId": 0,
+      "categoryId": 2
+    },
+    {
+      "tempatMakanId": 0,
+      "categoryId": 3
+    }
+  ],
+  "menu": [
+    {
+      "id": 0,
+      "tempatMakanId": 0,
+      "name": "PaNas Hebat Smoky BBQ Wings",
+      "thumbnail": "https://i.gojekapi.com/darkroom/gofood-indonesia/v2/images/uploads/387b2081-fa1f-41da-97eb-d67cca111349_TPO-112071.jpg?h=516&w=516&fit=crop&auto=compress",
+      "description": "Sayap Ayam, Nasi, Omelet, Fruit Tea x1",
+      "price": 30500,
+      "like": 20,
+      "createdAt": "2022-07-06 09:23:26+07",
+      "updatedAt": "2022-07-06 09:23:26+07"
+    },
+    {
+      "id": 1,
+      "tempatMakanId": 0,
+      "name": "Soda Gembira Float",
+      "thumbnail": "https://i.gojekapi.com/darkroom/gofood-indonesia/v2/images/uploads/d4d4ef08-cc4c-4add-b561-46a2f0eecf55_TPO-184094_1.jpg?h=516&w=516&fit=crop&auto=compress",
+      "description": "Soda Gembira",
+      "price": 17500,
+      "like": 12,
+      "createdAt": "2022-07-06 09:23:26+07",
+      "updatedAt": "2022-07-06 09:23:26+07"
+    }
+  ],
+  "review": [
+    {
+      "id": 0,
+      "userId": 0,
+      "tempatMakanId": 0,
+      "content": "Mantap bro",
+      "rating": 4,
+      "createdAt": "2022-08-06 09:23:26+07"
+    },
+    {
+      "id": 1,
+      "userId": 1,
+      "tempatMakanId": 0,
+      "content": "Mantap sekali tapi mahal",
+      "rating": 4,
+      "createdAt": "2022-08-06 09:25:26+07"
+    }
+  ],
+  "bookmark": [
+    {
+      "id": 0,
+      "userId": 1,
+      "tempatMakanId": 0,
+      "createdAt": "2022-08-06 09:25:22+07"
+    },
+    {
+      "userId": 0,
+      "tempatMakanId": 0,
+      "createdAt": "2022-08-06 09:25:22+07",
+      "id": 1
+    },
+    {
+      "userId": 0,
+      "tempatMakanId": 0,
+      "createdAt": "2022-08-06 09:25:22+07",
+      "id": 2
+    }
+  ],
+  "user": [
+    {
+      "username": "kurumi",
+      "email": "yorforger@gmail.com",
+      "password": "123456789",
+      "role": "USER",
+      "isVerified": true,
+      "createdAt": "2022-08-06 09:23:26+07",
+      "updatedAt": "2022-08-06 09:23:26+07",
+      "id": 0
+    },
+    {
+      "id": 1,
+      "username": "tohka",
+      "email": "yatogamitohka@gmail.com",
+      "role": "USER",
+      "isVerified": true,
+      "createdAt": "2022-08-06 09:23:26+07",
+      "updatedAt": "2022-08-06 09:23:26+07"
+    }
+  ],
+  "userVerificationToken": [
+    {
+      "id": 0,
+      "userId": 0,
+      "expires": "2022-08-15 09:23:26+07"
+    },
+    {
+      "id": 1,
+      "userId": 1,
+      "expires": "2022-08-15 09:23:26+07"
+    }
+  ],
+  "changePasswordToken": [
+    {
+      "id": 0,
+      "userId": 0,
+      "expires": "2022-08-12 09:23:26+07"
+    },
+    {
+      "id": 1,
+      "userId": 1,
+      "expires": "2022-08-12 09:23:26+07"
+    }
+  ]
 }

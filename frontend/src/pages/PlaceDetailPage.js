@@ -9,63 +9,74 @@ function PlaceDetailPage() {
   const { id } = useParams();
   const [placeData, setPlaceData] = useState(null);
   const [modalState, setModalState] = useState({ url: null });
+  const [placeReview, setPlaceReview] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch("http://localhost:8000/tempatMakan") // ini nanti harusnya ada url yang bakal langsung nge fetch data tempat makan sesuai id nya
+    setLoading(true);
+    fetch(`${process.env.REACT_APP_SERVER_URL}/tempat-makan/${id}`) // ini nanti harusnya ada url yang bakal langsung nge fetch data tempat makan sesuai id nya
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        console.log(res);
+
+        if (res.status === "success") {
+          setPlaceData(res.data);
+        } else {
+          window.alert(res.status);
+        }
+      })
+      .finally(() => setLoading(true));
+  }, [id]);
+
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/review/${id}`)
       .then((res) => {
         return res.json();
       })
       .then((data) => {
+        const newPlaceReview = [];
         data.forEach((element) => {
-          if (element.id == id) {
-            setPlaceData(element);
+          if (element.tempatMakanId === parseInt(id)) {
+            newPlaceReview.push(element);
             return;
           }
         });
+        setPlaceReview(newPlaceReview);
       });
-  }, []);
+  }, [id]);
 
   return (
     <>
-      {placeData && (
-        <div>
+      {placeData.length !== 0 && !loading ? (
+        <div className="my-24">
           <div className="mt-12">
-            <DetailCard
-              place={placeData}
-              category={["Fast Food", "Ayam", "Sapi", "Burger"]} // masih hard code, nanti ganti
-            />
+            <DetailCard place={placeData} />
           </div>
           <div className="flex flex-row space-x-20 mt-8">
             <div className="space-y-2">
               <h2>Cara Pembayaran</h2>
               <div className="flex flex-row space-x-2">
-                {Object.keys(placeData.paymentMethods).map((method, index) => {
-                  if (placeData.paymentMethods[method]) {
-                    return (
-                      <div key={index} className="chips-secondary">
-                        {method}
-                      </div>
-                    );
-                  } else {
-                    return <></>;
-                  }
-                })}
+                {placeData.paymentMethods.length !== 0 ? (
+                  placeData.paymentMethods.forEach((method) => {
+                    return <div className="chips-secondary">{method}</div>;
+                  })
+                ) : (
+                  <p>Tidak ada data</p>
+                )}
               </div>
             </div>
             <div className="space-y-2">
               <h2>Platform Pembelian</h2>
               <div className="flex flex-row space-x-2">
-                {Object.keys(placeData.platform).map((item, index) => {
-                  if (placeData.platform[item]) {
-                    return (
-                      <div key={index} className="chips-secondary">
-                        {item}
-                      </div>
-                    );
-                  } else {
-                    return <></>;
-                  }
-                })}
+                {placeData.platforms.length !== 0 ? (
+                  placeData.platforms.forEach((platform) => {
+                    return <div className="chips-secondary">{platform}</div>;
+                  })
+                ) : (
+                  <p>Tidak ada data</p>
+                )}
               </div>
             </div>
           </div>
@@ -92,9 +103,17 @@ function PlaceDetailPage() {
           </div>
           <div className="flex flex-col gap-3 mt-8 space-y-2">
             <h2>Review</h2>
-            <ReviewForm/>
-            <ReviewDisplay id={id}/>
+            <ReviewForm />
+            {placeReview.length !== 0 ? (
+              <ReviewDisplay placeReview={placeReview} />
+            ) : (
+              <p>Tidak ada review</p>
+            )}
           </div>
+        </div>
+      ) : (
+        <div className="w-full text-center mt-64">
+          {loading ? <h3>Loading...</h3> : <h3>No Data Available Right Now</h3>}
         </div>
       )}
     </>

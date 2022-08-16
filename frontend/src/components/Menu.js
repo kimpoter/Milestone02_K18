@@ -8,6 +8,7 @@ export function MenuModal({ menuImageUrl, closeModal }) {
         <img
           onClick={(e) => e.stopPropagation()}
           src={menuImageUrl}
+          alt="menu"
           className="max-h-screen min-h-[90vh]"
         />
       </div>
@@ -16,5 +17,5 @@ export function MenuModal({ menuImageUrl, closeModal }) {
 }
 
 export function MenuContainer({ menuImageUrl }) {
-  return <img src={menuImageUrl} className="h-[300px]" />;
+  return <img src={menuImageUrl} className="h-[300px]" alt="menu" />;
 }

@@ -1,37 +1,41 @@
 import { Routes, Route } from "react-router-dom";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Navbar from "./components/Navbar";
 import LandingPage from "./pages/LandingPage";
 import ScrollToTop from "./components/ScrollToTop";
 import SignInPage from "./pages/SignInPage";
 import SignUpPage from "./pages/SignUpPage";
 import PlaceDetailPage from "./pages/PlaceDetailPage";
-import BookmarkPage from "./pages/BookmarkPage"
+import BookmarkPage from "./pages/BookmarkPage";
 import SearchResult from "./pages/SearchResult";
 import UserSettingPage from "./pages/UserSettingPage";
+import CampusContext from "./CampusContext";
 
 function App() {
-  const [ dropdownState, setDropdownState ] = useState(false);
-
+  const [dropdownState, setDropdownState] = useState(false);
+  const { campus } = useContext(CampusContext);
 
   function handleDropdown(e) {
-    e.stopPropagation()
-    setDropdownState(!dropdownState)
-}
+    e.stopPropagation();
+    setDropdownState(!dropdownState);
+  }
 
   return (
     <div onClick={() => setDropdownState(false)}>
-      <Navbar dropdownState={dropdownState} handleDropdown={handleDropdown}/>
+      <Navbar dropdownState={dropdownState} handleDropdown={handleDropdown} />
       <ScrollToTop />
       <div className="sm:pt-[100px] pt-[68px] px-16">
         <Routes>
-          <Route exact path="/" element={<LandingPage />} />
+          <Route exact path="/" element={<LandingPage campus={campus} />} />
           <Route exact path="/place-detail/:id" element={<PlaceDetailPage />} />
           <Route exact path="/signin" element={<SignInPage />} />
           <Route exact path="/signup" element={<SignUpPage />} />
           <Route exact path="/bookmark" element={<BookmarkPage />} />
-          <Route exact path="/searchresult" element={<SearchResult />} />
-          <Route exact path="/user/setting" element={<UserSettingPage/>} />
+          <Route
+            path={`/tempat-makan/campus/${campus}`}
+            element={<SearchResult />}
+          />
+          <Route exact path="/user/setting" element={<UserSettingPage />} />
         </Routes>
       </div>
     </div>
