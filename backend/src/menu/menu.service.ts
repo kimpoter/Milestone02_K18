@@ -1,7 +1,5 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
-import e from 'express';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { domainToASCII } from 'url';
 import { CreateMenuDto } from './dto';
 
 @Injectable()
@@ -11,23 +9,23 @@ export class MenuService {
   async getMenu(id) {
     const dataMenu = await this.prisma.menu.findMany({
       where: {
-        tempatMakanId : id
+        tempatMakanId: id
       }
     })
 
     return {
-      status : 'success',
-      data : dataMenu
+      status: 'success',
+      data: dataMenu
     }
   }
 
-  async createMenu(dto : CreateMenuDto, id) {
+  async createMenu(dto: CreateMenuDto, id) {
     try {
       await this.prisma.menu.create({
-        data : {
-          tempatMakanId : id,
-          imageUrl : dto.imageUrl,
-          description : dto.description
+        data: {
+          tempatMakanId: id,
+          imageUrl: dto.imageUrl,
+          description: dto.description
         }
       })
     } catch (error) {
@@ -35,20 +33,20 @@ export class MenuService {
     }
 
     return {
-      status : 'success',
-      message : 'menu has been created'
+      status: 'success',
+      message: 'menu has been created'
     }
   }
 
-  async updateMenu(dto : CreateMenuDto, id) {
+  async updateMenu(dto: CreateMenuDto, id) {
     try {
       await this.prisma.menu.update({
-        where : {
+        where: {
           id
         },
-        data : {
-          imageUrl : dto.imageUrl,
-          description : dto.description
+        data: {
+          imageUrl: dto.imageUrl,
+          description: dto.description
         }
       })
     } catch (error) {
@@ -56,8 +54,8 @@ export class MenuService {
     }
 
     return {
-      status : 'success',
-      message : 'menu has been updated'
+      status: 'success',
+      message: 'menu has been updated'
     }
   }
 
@@ -68,13 +66,13 @@ export class MenuService {
           id
         }
       })
-    } catch(error) {
+    } catch (error) {
       throw new InternalServerErrorException(error)
     }
 
     return {
-      status : 'success',
-      message : 'menu has been deleted'
+      status: 'success',
+      message: 'menu has been deleted'
     }
   }
 }
