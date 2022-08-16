@@ -33,7 +33,13 @@ export class BookmarkService {
         userId
       },
       include: {
-        tempatMakan: true
+        tempatMakan: {
+          include: {
+            platforms: true,
+            paymentMethods: true,
+            categories: true
+          }
+        }
       }
     })
 
