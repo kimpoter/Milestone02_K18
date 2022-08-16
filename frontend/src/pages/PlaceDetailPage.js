@@ -27,29 +27,29 @@ function PlaceDetailPage() {
           window.alert(res.status);
         }
       })
-      .finally(() => setLoading(true));
+      .finally(() => setLoading(false));
   }, [id]);
 
   useEffect(() => {
+    setLoading(true);
     fetch(`${process.env.REACT_APP_SERVER_URL}/review/${id}`)
       .then((res) => {
         return res.json();
       })
-      .then((data) => {
-        const newPlaceReview = [];
-        data.forEach((element) => {
-          if (element.tempatMakanId === parseInt(id)) {
-            newPlaceReview.push(element);
-            return;
-          }
-        });
-        setPlaceReview(newPlaceReview);
-      });
+      .then((res) => {
+        console.log(res);
+        if (res.status === "success") {
+          setPlaceReview(res.data);
+        } else {
+          window.alert(res.status);
+        }
+      })
+      .finally(() => setLoading(false));
   }, [id]);
 
   return (
     <>
-      {placeData.length !== 0 && !loading ? (
+      {placeData && !loading ? (
         <div className="my-24">
           <div className="mt-12">
             <DetailCard place={placeData} />

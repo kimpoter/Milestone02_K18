@@ -2,17 +2,8 @@ import { Chip } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import CampusContext from "../CampusContext";
+import PlaceContext from "../PlaceContext";
 
-const platforms = ["gofood", "shopeefood", "grabfood", "langsung"];
-const paymentMethods = [
-  "tunai",
-  "gopay",
-  "shopeepay",
-  "ovo",
-  "qris bca",
-  "debit",
-];
-const categories = ["ayam", "chinesee food", "babi"];
 const priceRange = [
   {
     value: 0,
@@ -46,6 +37,7 @@ const PLACE_URL = {
 };
 
 function FilterTab({ searchValue }) {
+  const { categories, paymentMethods, platforms } = useContext(PlaceContext);
   const [categoriesValue, setCategoriesValue] = useState([]);
   const [platformsValue, setPlatformsValue] = useState([]);
   const [paymentMethodsValue, setPaymentMethodsValue] = useState([]);
@@ -56,9 +48,11 @@ function FilterTab({ searchValue }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setMinPrice(parseInt(priceRangeValue));
+    setMinPrice(priceRangeValue ? parseInt(priceRangeValue) : 0);
     if (parseInt(priceRangeValue) !== 50000) {
       setMaxPrice(parseInt(priceRangeValue) + 10000);
+    } else {
+      setMaxPrice(999999);
     }
   }, [priceRangeValue]);
 

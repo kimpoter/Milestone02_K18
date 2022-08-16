@@ -29,7 +29,7 @@ function Rating({ rating, position }) {
   );
 }
 
-export function PreviewCard({ place, category }) {
+export function PreviewCard({ place }) {
   return (
     <div className="mx-2 shadow-xl  bg-white px-4 py-4 mt-8 sm:w-[270px] w-[200px] sm:min-h-[270px] min-h-[200px] rounded-3xl relative hover:cursor-pointer">
       <img
@@ -40,7 +40,7 @@ export function PreviewCard({ place, category }) {
       <Rating position={"absolute top-6 right-6 z-1"} rating={place.rating} />
       <h2 className="mt-4">{place.name}</h2>
       <ul className="opacity-50">
-        <li>{category.join(", ")}</li>
+        <li>{place.categories.join(", ")}</li>
         <li>{place.address}</li>
         <li>
           {formatTimeToLocalTime(place.timeOpen)} -{" "}
@@ -52,7 +52,7 @@ export function PreviewCard({ place, category }) {
 }
 
 // TODO: Link to Google Maps and Bookmark
-export function DetailCard({ place, category }) {
+export function DetailCard({ place }) {
   const [isBookmark, setIsBookmark] = useState(false);
 
   /*function addBookmark(e) {

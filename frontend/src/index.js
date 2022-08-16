@@ -6,15 +6,18 @@ import { BrowserRouter } from "react-router-dom";
 import { AuthContextProvider } from "./AuthContext";
 import { CampusContextProvider } from "./CampusContext";
 import { CookiesProvider } from "react-cookie";
+import { PlaceContextProvider } from "./PlaceContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
     <CookiesProvider>
       <CampusContextProvider>
-        <AuthContextProvider>
-          <App />
-        </AuthContextProvider>
+        <PlaceContextProvider>
+          <AuthContextProvider>
+            <App />
+          </AuthContextProvider>
+        </PlaceContextProvider>
       </CampusContextProvider>
     </CookiesProvider>
   </BrowserRouter>
