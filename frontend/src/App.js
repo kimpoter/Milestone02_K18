@@ -10,6 +10,7 @@ import BookmarkPage from "./pages/BookmarkPage";
 import SearchResult from "./pages/SearchResult";
 import UserSettingPage from "./pages/UserSettingPage";
 import CampusContext from "./CampusContext";
+import AdminDashboardPage from "./pages/AdminDashboardPage";
 
 function App() {
   const [dropdownState, setDropdownState] = useState(false);
@@ -36,6 +37,11 @@ function App() {
             element={<SearchResult />}
           />
           <Route exact path="/user/setting" element={<UserSettingPage />} />
+          <Route
+            exact
+            path="/admin/dashboard"
+            element={<AdminDashboardPage />}
+          />
         </Routes>
       </div>
     </div>
