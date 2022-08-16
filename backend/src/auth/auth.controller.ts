@@ -32,6 +32,7 @@ export class AuthController {
     res.cookie("ITBFood_AT", access_token, {
       maxAge: 24 * 60 * 60 * 1000, // 1 minute
       httpOnly: true,
+      secure: true,
       sameSite: 'none',
     })
 
@@ -39,6 +40,7 @@ export class AuthController {
     res.cookie("ITBFood_RT", refresh_token, {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
       httpOnly: true,
+      secure: true,
       sameSite: 'none',
     })
 
@@ -59,6 +61,7 @@ export class AuthController {
     res.cookie("ITBFood_AT", access_token, {
       maxAge: 24 * 60 * 60 * 1000, // 1 minute
       httpOnly: true,
+      secure: true,
       sameSite: 'none',
     })
 
@@ -66,6 +69,7 @@ export class AuthController {
     res.cookie("ITBFood_RT", refresh_token, {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
       httpOnly: true,
+      secure: true,
       sameSite: 'none',
     })
 
@@ -81,11 +85,13 @@ export class AuthController {
     res.cookie("ITBFood_AT", '', {
       maxAge: -1,
       httpOnly: true,
+      secure: true,
       sameSite: 'none'
     })
     res.cookie("ITBFood_RT", '', {
       maxAge: -1,
       httpOnly: true,
+      secure: true,
       sameSite: 'none'
     })
     return this.authService.signOut(email);
@@ -107,6 +113,7 @@ export class AuthController {
     res.cookie("ITBFood_AT", access_token, {
       maxAge: 24 * 60 * 60 * 1000, // 1 minute
       httpOnly: true,
+      secure: true,
       sameSite: 'none',
     })
 
@@ -114,6 +121,7 @@ export class AuthController {
     res.cookie("ITBFood_RT", refresh_token, {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
       httpOnly: true,
+      secure: true,
       sameSite: 'none',
     })
 
