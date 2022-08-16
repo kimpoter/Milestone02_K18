@@ -1,11 +1,14 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable, UnauthorizedException } from '@nestjs/common';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const ImageKit = require('imagekit')
 
 @Injectable()
 export class UploadService {
   // Upload tempatMakan Image
-  async uploadImage(file: Express.Multer.File) {
+  async uploadImage(file: Express.Multer.File, role: string) {
+    if (role !== 'ADMIN') {
+      throw new UnauthorizedException('Unauthorized')
+    }
     // New imageKit instance
     // eslint-disable-next-line prefer-const
     const imagekit = new ImageKit({

@@ -9,28 +9,21 @@ const PLACE_URL = {
   JATINAGOR: `/tempat-makan/campus/jatinagor?sort_status=asc&sort_data=rating`,
 };
 
-function SearchFilter() {
+
+function SearchFilter({ preventDefault }) {
   const [filterDisplay, setFilterDisplay] = useState(false);
   const { campus } = useContext(CampusContext);
   const searchValue = useRef();
   const navigate = useNavigate();
 
   function handleFilterClick() {
-    if (!filterDisplay) {
-      window.scrollTo({
-        top: 800,
-        behavior: "smooth",
-      });
-    } else {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-    }
     setFilterDisplay(!filterDisplay);
   }
 
-  function handleSubmit() {
+  function handleSubmit(e) {
+    if (preventDefault) {
+      e.preventDefault();
+    }
     navigate(`${PLACE_URL[campus]}&search=${searchValue.current.value}`);
   }
 
@@ -38,8 +31,9 @@ function SearchFilter() {
     <div>
       <div className="flex flex-row justify-between items-center space-x-4 w-[70vw]">
         <FaSearch />
-        <form disabled={filterDisplay} onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit}>
           <input
+            disabled={filterDisplay}
             placeholder="Telusuri tempat makan di sekitarmu!"
             className="bg-greyscale rounded-2xl w-[60vw] px-6 py-2"
             ref={searchValue}
@@ -53,7 +47,7 @@ function SearchFilter() {
         </button>
       </div>
 
-      {filterDisplay && <FilterTab />}
+      {filterDisplay && <FilterTab searchValue={searchValue.current.value} />}
     </div>
   );
 }

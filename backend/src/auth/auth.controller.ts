@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -11,34 +12,107 @@ import { Response } from "express";
 import {
   GetCurrentUser,
   GetCurrentUserEmail,
+  GetCurrentUserId,
+  GetCurrentUserRole,
+  GetCurrentUserUsername,
   Public,
 } from "src/common/decorators";
 import { RtGuard } from "src/common/guards";
 import { AuthService } from "./auth.service";
-import { SignInDto, SignUpDto, VerifyAccountDto } from "./dto";
-import { Tokens } from "./types";
+import { SignInDto, SignUpDto } from "./dto";
 
 @Controller("auth")
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) { }
+
+  @Get('/user')
+  async getCurrentUserData(@GetCurrentUserEmail() email: string, @GetCurrentUserId() userId: number, @GetCurrentUserRole() role: string, @GetCurrentUserUsername() username: string) {
+    return {
+      status: 'success',
+      data: {
+        userId,
+        username,
+        email,
+        role,
+      }
+    }
+  }
 
   @Public()
   @Post("signup")
   @HttpCode(HttpStatus.CREATED)
-  signUpLocal(@Body() dto: SignUpDto) {
-    this.authService.signUpLocal(dto);
+  async signUpLocal(@Body() dto: SignUpDto, @Res({ passthrough: true }) res: Response): Promise<object> {
+    const tokens = await this.authService.signUpLocal(dto);
+    const { access_token, refresh_token } = tokens
+
+    // Set the access_token in cookie
+    res.cookie("ITBFood_AT", access_token, {
+      maxAge: 24 * 60 * 60 * 1000, // 1 minute
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    })
+
+    // Set the refresh_token in cookie
+    res.cookie("ITBFood_RT", refresh_token, {
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    })
+
+    return {
+      status: 'success',
+      message: 'Account has been created',
+      tokens
+    }
   }
 
   @Public()
   @Post("signin")
   @HttpCode(HttpStatus.OK)
-  signInLocal(@Body() dto: SignInDto): Promise<Tokens> {
-    return this.authService.signInLocal(dto);
+  async signInLocal(@Body() dto: SignInDto, @Res({ passthrough: true }) res: Response) {
+    const tokens = await this.authService.signInLocal(dto);
+    const { access_token, refresh_token } = tokens
+
+    // Set the access_token in cookie
+    res.cookie("ITBFood_AT", access_token, {
+      maxAge: 24 * 60 * 60 * 1000, // 1 minute
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    })
+
+    // Set the refresh_token in cookie
+    res.cookie("ITBFood_RT", refresh_token, {
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    })
+
+    return {
+      status: 'success',
+      message: 'Sign In success',
+      tokens
+    }
   }
 
   @Post("signout")
   @HttpCode(HttpStatus.OK)
-  signOut(@GetCurrentUserEmail() email: string) {
+  signOut(@GetCurrentUserEmail() email: string, @Res({ passthrough: true }) res: Response) {
+    res.cookie("ITBFood_AT", '', {
+      maxAge: -1,
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none'
+    })
+    res.cookie("ITBFood_RT", '', {
+      maxAge: -1,
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none'
+    })
     return this.authService.signOut(email);
   }
 
@@ -46,24 +120,34 @@ export class AuthController {
   @UseGuards(RtGuard)
   @Post("refresh")
   @HttpCode(HttpStatus.OK)
-  refreshTokens(
+  async refreshTokens(
     @GetCurrentUserEmail() email: string,
-    @GetCurrentUser("refreshToken") refreshToken: string
-  ) {
-    return this.authService.refreshTokens(email, refreshToken);
-  }
-
-  @Public()
-  @Post("account/verify")
-  verifyccount(
-    @Body() dto: VerifyAccountDto,
+    @GetCurrentUser("refreshToken") refreshToken: string,
     @Res({ passthrough: true }) res: Response
   ) {
-    const access_token = this.authService.verifyAccount(dto);
-    res.cookie("a-token", access_token, {
-      maxAge: 30 * 1000, // 30 seconds
+    const tokens = await this.authService.refreshTokens(email, refreshToken);
+    const { access_token, refresh_token } = tokens
+
+    // Set the access_token in cookie
+    res.cookie("ITBFood_AT", access_token, {
+      maxAge: 24 * 60 * 60 * 1000, // 1 minute
       httpOnly: true,
-    });
-    return access_token;
+      secure: true,
+      sameSite: 'none',
+    })
+
+    // Set the refresh_token in cookie
+    res.cookie("ITBFood_RT", refresh_token, {
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+    })
+
+    return {
+      status: 'success',
+      message: 'New Token has been generated',
+      tokens
+    }
   }
 }

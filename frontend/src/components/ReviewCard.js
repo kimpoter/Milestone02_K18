@@ -33,7 +33,6 @@ function Rating({ rating, position }) {
     </div>
   );
 }
-
 export function ReviewCard({ reviews }) {
   return (
     <div className="card py-6 sm:text-base text-sm flex flex-col w-full mt-6">
