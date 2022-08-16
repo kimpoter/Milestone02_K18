@@ -1,14 +1,16 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import CampusContext from "../CampusContext";
+import PlaceDisplay from "../components/PlaceDisplay";
 import { FaSearch } from "react-icons/fa";
 import FilterTab from "../components/FilterTab";
-import PlaceDisplay from "../components/PlaceDisplay";
 
 const PLACE_URL = {
-  GANESHA: `${process.env.REACT_APP_SERVER_URL}/tempat-makan/campus/ganesha`,
-  JATINAGOR: `${process.env.REACT_APP_SERVER_URL}/tempat-makan/campus/jatinagor`,
+  GANESHA: `${process.env.REACT_APP_SERVER_URL}/tempat-makan/campus/ganesha?sort_status=asc&sort_data=rating`,
+  JATINAGOR: `${process.env.REACT_APP_SERVER_URL}/tempat-makan/campus/jatinagor?sort_status=asc&sort_data=rating`,
 };
 
-function LandingPage({ campus }) {
+function LandingPage() {
+  const { campus } = useContext(CampusContext);
   const [filterDisplay, setFilterDisplay] = useState(false);
 
   function handleFilterClick() {
@@ -34,7 +36,7 @@ function LandingPage({ campus }) {
 
       <div className="flex flex-row justify-between items-center space-x-4 w-[70vw]">
         <FaSearch />
-        <form>
+        <form disabled={filterDisplay}>
           <input
             placeholder="Telusuri tempat makan di sekitarmu!"
             className="bg-greyscale rounded-2xl w-[60vw] px-6 py-2"
@@ -51,9 +53,8 @@ function LandingPage({ campus }) {
       {filterDisplay && <FilterTab />}
       <div className="flex justify-center min-h-[90vh] w-[70vw] bg-greyscale mt-12 py-12 rounded-t-[36px]">
         <div className="w-full px-12">
-          <div className="flex justify-between">
+          <div className="flex justify-start">
             <h1 className="text-3xl font-semibold">Rekomendasi Kami</h1>
-            <button className="btn-primary">Lihat Semua</button>
           </div>
           <PlaceDisplay place_data_url={PLACE_URL[campus]} />
         </div>
