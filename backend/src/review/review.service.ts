@@ -43,6 +43,37 @@ export class ReviewService {
     } catch (error) {
       throw new InternalServerErrorException(error)
     }
+
+    // Get data tempatMakan
+    const dataTempatMakan = await this.prisma.tempatMakan.findUnique({
+      where: {
+        id: tempatMakanId,
+      },
+      include: {
+        reviews: true
+      }
+    })
+
+    // Calculate total rating
+    const totalRating = dataTempatMakan.rating + dto.rating
+
+    // Calculate final rating
+    const ratingTempatMakan = totalRating / (dataTempatMakan.reviews.length)
+
+    // Update rating tempat makan
+    try {
+      await this.prisma.tempatMakan.update({
+        where: {
+          id: dataTempatMakan.id
+        },
+        data: {
+          rating: ratingTempatMakan
+        }
+      })
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
+
     return {
       status: 'success',
       message: 'Review has been created'
