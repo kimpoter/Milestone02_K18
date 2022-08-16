@@ -1,43 +1,20 @@
-import { useState } from "react";
-import { FaSearch } from "react-icons/fa";
+import CampusContext from "../CampusContext";
+import { useContext } from "react";
 import PlaceDisplay from "../components/PlaceDisplay";
+import SearchFilter from "../components/SearchFilter";
+
+const PLACE_URL = {
+  GANESHA: `${process.env.REACT_APP_SERVER_URL}/tempat-makan/campus/ganesha?sort_status=asc&sort_data=rating`,
+  JATINAGOR: `${process.env.REACT_APP_SERVER_URL}/tempat-makan/campus/jatinagor?sort_status=asc&sort_data=rating`,
+};
 
 export default function BookmarkPage() {
-  const [filterDisplay, setFilterDisplay] = useState(false);
-
-  function handleFilterClick() {
-    if (!filterDisplay) {
-      window.scrollTo({
-        top: 400,
-        behavior: "smooth",
-      });
-    } else {
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
-    }
-    setFilterDisplay(!filterDisplay);
-  }
+  const { campus } = useContext(CampusContext);
 
   return (
     <div className="flex flex-col items-center text-lg text-primary">
       {/* Filter Search */}
-      <div className="flex flex-row my-16 justify-between items-center space-x-4 w-[70vw]">
-        <FaSearch />
-        <form>
-          <input
-            placeholder="Telusuri tempat makan di sekitarmu!"
-            className="bg-greyscale rounded-2xl w-[60vw] px-6 py-2"
-          ></input>
-        </form>
-        <button
-          onClick={handleFilterClick}
-          className="btn-primary rounded-2xl px-8 py-2"
-        >
-          Filter
-        </button>
-      </div>
+      <SearchFilter />
 
       {/* Main Bookmark */}
       <div className="bg-[#EFEFEF] w-full p-8 pb-20 rounded-3xl">
@@ -56,7 +33,7 @@ export default function BookmarkPage() {
                     Bookmark
                 </h1> */}
         <div className="flex flex-wrap justify-center w-full">
-          <PlaceDisplay place_data_url="http://localhost:8000/tempatMakan" />
+          <PlaceDisplay place_data_url={PLACE_URL[campus]} />
         </div>
       </div>
     </div>

@@ -1,17 +1,42 @@
 import { Link } from "react-router-dom";
-import React from "react";
+import React, { useState } from "react";
+import axios from "../api/axios";
 
+const REGISTER_URL = `/auth/signin`;
 // TODO: buat components Form
 function SignInPage() {
   const emailRef = React.useRef(null);
   const passwordRef = React.useRef(null);
+  const [loading, setLoading] = useState(false);
 
-  function onSubmit() {
+  async function onSubmit(e) {
+    e.preventDefault();
+
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
 
-    console.log("Email : ", email);
-    console.log("Password : ", password);
+    setLoading(true);
+    try {
+      const res = await axios.post(
+        REGISTER_URL,
+        JSON.stringify({ email, password }),
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+      console.log(res);
+    } catch (err) {
+      if (!err?.res) {
+        console.log("No Server Response");
+      } else if (err.res?.status === 409) {
+        console.log("Username Taken");
+      } else {
+        console.log("Registration Failed");
+      }
+    }
+
+    setLoading(false);
   }
 
   return (
@@ -20,7 +45,11 @@ function SignInPage() {
         <h1 className="sm:text-3xl text-2xl font-semibold text-center mb-12">
           Sign In
         </h1>
-        <form className="sm:text-lg text-base" onSubmit={onSubmit}>
+        <form
+          className="sm:text-lg text-base"
+          onSubmit={onSubmit}
+          disabled={loading}
+        >
           <div className="flex flex-col mb-4">
             <label>Email</label>
             <input
