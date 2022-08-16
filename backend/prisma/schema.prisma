@@ -47,8 +47,8 @@ model TempatMakan {
   address     String?
   latitude    Float?
   longitude   Float?
-  timeOpen    Int?
-  timeClose   Int?
+  timeOpen    String?
+  timeClose   String?
   distance    Float?
   rating      Float?
   campus      Campus
