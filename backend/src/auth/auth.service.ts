@@ -4,7 +4,6 @@ import { SignUpDto, SignInDto } from "./dto";
 import * as argon2 from 'argon2'
 import { Tokens } from "./types";
 import { JwtService } from "@nestjs/jwt";
-import { User } from "@prisma/client";
 
 @Injectable()
 export class AuthService {
@@ -19,7 +18,7 @@ export class AuthService {
 
     // TODO: Save the user to database
     const hashedPassword = await this.hashData(dto.password);
-    let newUser: User
+    let newUser
     try {
       newUser = await this.prisma.user.create({
         data: {
