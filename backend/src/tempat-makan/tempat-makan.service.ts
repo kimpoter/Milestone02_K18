@@ -217,6 +217,7 @@ export class TempatMakanService {
     if (role !== 'ADMIN') {
       throw new UnauthorizedException('Unauthorized')
     }
+
     // Formatting category data
     const categoriesArray = dto.category ? dto.category.split(';') : undefined
     let categoryData
@@ -254,8 +255,9 @@ export class TempatMakanService {
     }
 
     // Save tmepat makan data to the database
+    let dataTempatMakan;
     try {
-      await this.prisma.tempatMakan.create({
+      dataTempatMakan = await this.prisma.tempatMakan.create({
         data: {
           name: dto.name,
           description: dto.description,
@@ -268,7 +270,7 @@ export class TempatMakanService {
           timeOpen: dto.timeOpen,
           timeClose: dto.timeClose,
           distance: dto.distance,
-          rating: dto.rating,
+          rating: 0,
           categories: {
             connect: categoryData
           },
@@ -284,6 +286,35 @@ export class TempatMakanService {
     } catch (error) {
       throw new InternalServerErrorException(error)
     }
+
+    // calculate rating
+    const dataReview = await this.prisma.review.findMany({
+      where: {
+        tempatMakanId: dataTempatMakan.id
+      }
+    })
+    let totalRating = 0
+    dataReview.map((review) => {
+      totalRating += review.rating
+    })
+
+    let ratingTempatMakan
+    if (dataReview.length) ratingTempatMakan = totalRating / (dataReview.length)
+
+    // Update rating tempat makan
+    try {
+      await this.prisma.tempatMakan.update({
+        where: {
+          id: dataTempatMakan.id
+        },
+        data: {
+          rating: ratingTempatMakan
+        }
+      })
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
+
     return {
       status: 'success',
       message: 'Tempat Makan has been created'

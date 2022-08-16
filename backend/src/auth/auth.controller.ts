@@ -63,7 +63,8 @@ export class AuthController {
 
     return {
       status: 'success',
-      message: 'Account has been created'
+      message: 'Account has been created',
+      tokens
     }
   }
 
@@ -92,7 +93,8 @@ export class AuthController {
 
     return {
       status: 'success',
-      message: 'Sign In success'
+      message: 'Sign In success',
+      tokens
     }
   }
 
@@ -144,7 +146,8 @@ export class AuthController {
 
     return {
       status: 'success',
-      message: 'New Token has been generated'
+      message: 'New Token has been generated',
+      tokens
     }
   }
 }
