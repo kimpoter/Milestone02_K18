@@ -26,15 +26,7 @@ function LandingPage() {
                 <img src='logo.svg' alt='ITBFood logo' />
             </div>
 
-            <div className="flex flex-row justify-between items-center space-x-4 w-[70vw]">
-                <FaSearch />
-                <form>
-                    <input placeholder="Telusuri tempat makan di sekitarmu!" className="bg-greyscale rounded-2xl w-[60vw] px-6 py-2"></input>
-                </form>
-                <button onClick={handleFilterClick} className="btn-primary rounded-2xl px-8 py-2">Filter</button>
-            </div>
-
-            {filterDisplay && <FilterTab />}
+            <SearchFilter/>
             <div className="flex justify-center h-fit w-[70vw] bg-greyscale mt-12 py-12 rounded-t-[36px]">
                 <div className="w-full px-12">
                     <div className="flex justify-between">
