@@ -87,7 +87,7 @@ export class AuthService {
     };
   }
 
-  async refreshTokens(email: string, rt: string): Promise<Tokens> {
+  async refreshTokens(email: string, rt: string,): Promise<Tokens> {
     const user = await this.prisma.user.findUnique({
       where: {
         email,
