@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { Public } from 'src/common/decorators';
+import { GetCurrentUserRole, Public } from 'src/common/decorators';
 import { createPlatformDto } from './dto';
 import { PlatformService } from './platform.service';
 
@@ -15,16 +15,14 @@ export class PlatformController {
   }
 
   // Create new platform
-  @Public()
   @Post()
-  async createPlatform(@Body() dto: createPlatformDto) {
-    return await this.platformService.createPlatform(dto)
+  async createPlatform(@Body() dto: createPlatformDto, @GetCurrentUserRole() role: string) {
+    return await this.platformService.createPlatform(dto, role)
   }
 
   // Delete platform
-  @Public()
   @Delete('/:id')
-  async deletePlatform(@Param('id') platformId: number) {
-    return await this.platformService.deletePlatform(+platformId)
+  async deletePlatform(@Param('id') platformId: number, @GetCurrentUserRole() role: string) {
+    return await this.platformService.deletePlatform(+platformId, role)
   }
 }

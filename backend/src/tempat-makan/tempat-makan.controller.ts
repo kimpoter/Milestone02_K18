@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
-import { Public } from 'src/common/decorators';
+import { GetCurrentUserId, GetCurrentUserRole, Public } from 'src/common/decorators';
 import { CreateTempatMakanDto, UpdateTempatMakanDto } from './dto';
 import { TempatMakanService } from './tempat-makan.service';
 
@@ -22,24 +22,21 @@ export class TempatMakanController {
   }
 
   // Create tempatMakan
-  @Public()
   @Post()
-  createTempatMakan(@Body() dto: CreateTempatMakanDto) {
-    return this.tempatMakanService.createTempatMakan(dto)
+  createTempatMakan(@Body() dto: CreateTempatMakanDto, @GetCurrentUserRole() role: string, @GetCurrentUserId() userId: number,) {
+    return this.tempatMakanService.createTempatMakan(dto, role, userId)
   }
 
   // Update tempatMakan
-  @Public()
   @Put(':id')
-  updateTempatMakan(@Body() dto: UpdateTempatMakanDto, @Param('id') id: number) {
-    return this.tempatMakanService.updateTempatMakan(dto, +id)
+  updateTempatMakan(@Body() dto: UpdateTempatMakanDto, @Param('id') id: number, @GetCurrentUserRole() role: string) {
+    return this.tempatMakanService.updateTempatMakan(dto, +id, role)
   }
 
   // Delete tempatMakan
-  @Public()
   @Delete(':id')
-  deleteTempatMakan(@Param('id') id: number) {
-    return this.tempatMakanService.deleteTempatMakan(+id)
+  deleteTempatMakan(@Param('id') id: number, @GetCurrentUserRole() role: string) {
+    return this.tempatMakanService.deleteTempatMakan(+id, role)
   }
 
 }

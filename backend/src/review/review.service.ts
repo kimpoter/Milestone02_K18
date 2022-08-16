@@ -1,6 +1,6 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CreateReview } from './dto';
+import { CreateReviewDto } from './dto';
 
 
 @Injectable()
@@ -21,16 +21,16 @@ export class ReviewService {
 
 
   // Create Review
-  async createReview(dto: CreateReview) {
+  async createReview(dto: CreateReviewDto, tempatMakanId: number, userId: number) {
     // Save review data to the database
     try {
       await this.prisma.review.create({
         data: {
-          userId: 1,
-          tempatMakanId: dto.tempatMakanId,
+          userId,
           content: dto.content,
-          rating: dto.rating
-        },
+          rating: dto.rating,
+          tempatMakanId,
+        }
       })
     } catch (error) {
       throw new InternalServerErrorException(error)
@@ -43,11 +43,11 @@ export class ReviewService {
 
 
   // Delete Review
-  async deleteReview(tempatMakanId: number) {
+  async deleteReview(reviewId: number) {
     try {
       await this.prisma.review.delete({
         where: {
-          id: tempatMakanId
+          id: reviewId,
         }
       })
     } catch (error) {

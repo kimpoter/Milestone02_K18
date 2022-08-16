@@ -106,8 +106,8 @@ model Platform {
 model Review {
   id Int @id @default(autoincrement())
 
-  userId        Int
-  user          User        @relation(fields: [userId], references: [id])
+  userId        Int?
+  user          User?       @relation(fields: [userId], references: [id])
   tempatMakanId Int
   tempatMakan   TempatMakan @relation(fields: [tempatMakanId], references: [id])
 

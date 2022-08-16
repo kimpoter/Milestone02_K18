@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateTempatMakanDto, UpdateTempatMakanDto } from './dto';
 
@@ -213,7 +213,10 @@ export class TempatMakanService {
   }
 
   // Create tempatMakan
-  async createTempatMakan(dto: CreateTempatMakanDto) {
+  async createTempatMakan(dto: CreateTempatMakanDto, role: string, userId: number) {
+    if (role !== 'ADMIN') {
+      throw new UnauthorizedException('Unauthorized')
+    }
     // Formatting category data
     const categoriesArray = dto.category ? dto.category.split(';') : undefined
     let categoryData
@@ -275,7 +278,7 @@ export class TempatMakanService {
           platforms: {
             connect: platformData
           },
-          userId: 1
+          userId,
         },
       })
     } catch (error) {
@@ -288,7 +291,10 @@ export class TempatMakanService {
   }
 
   // Update tempatMakan
-  async updateTempatMakan(dto: UpdateTempatMakanDto, tempatMakanId: number) {
+  async updateTempatMakan(dto: UpdateTempatMakanDto, tempatMakanId: number, role: string) {
+    if (role !== 'ADMIN') {
+      throw new UnauthorizedException('Unauthorized')
+    }
     // Formatting category data
     const categoriesArray = dto.category ? dto.category.split(';') : undefined
     let categoryData
@@ -353,7 +359,6 @@ export class TempatMakanService {
           platforms: {
             connect: platformData
           },
-          userId: 1
         },
       })
     } catch (error) {
@@ -366,7 +371,10 @@ export class TempatMakanService {
   }
 
   // Delete tempatMakan
-  async deleteTempatMakan(tempatMakanId: number) {
+  async deleteTempatMakan(tempatMakanId: number, role: string) {
+    if (role !== 'ADMIN') {
+      throw new UnauthorizedException('Unauthorized')
+    }
     try {
       await this.prisma.tempatMakan.delete({
         where: {

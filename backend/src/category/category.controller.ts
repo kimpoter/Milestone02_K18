@@ -1,38 +1,29 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
-import { Public } from 'src/common/decorators';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { GetCurrentUserRole, Public } from 'src/common/decorators';
 import { CategoryService } from './category.service';
-import { CreateCategoryDto, UpdateCategoryDto } from './dto';
+import { CreateCategoryDto } from './dto';
 
 @Controller('category')
 export class CategoryController {
-    constructor(private categoryService: CategoryService) { }
+  constructor(private categoryService: CategoryService) { }
 
-    //1
-    @Public()
-    @Get()
-    getAllCategory(){
-        return this.categoryService.getAllCategory()
-      }
-    
-    //2
-    @Public()
-    @Post()
-    createCategory(@Body() dto :CreateCategoryDto ,){
-        return this.categoryService.createCategory(dto)
-    }
+  //1
+  @Public()
+  @Get()
+  getAllCategory() {
+    return this.categoryService.getAllCategory()
+  }
 
-    //3
-    @Public()
-    @Put('/:id')
-    updateCategory(@Body() dto : UpdateCategoryDto,@Param('id') id : number){
-        return this.categoryService.updateCategory(dto,+id)
-    }
+  //2
+  @Post()
+  createCategory(@Body() dto: CreateCategoryDto, @GetCurrentUserRole() role: string) {
+    return this.categoryService.createCategory(dto, role)
+  }
 
-    //4
-    @Public()
-    @Delete('/:id')
-    deleteCategory(@Param('id') id :number){
-        return this.categoryService.deleteCategory(+id)
-    }
+  //4
+  @Delete('/:id')
+  deleteCategory(@Param('id') categoryId: number, @GetCurrentUserRole() role: string) {
+    return this.categoryService.deleteCategory(+categoryId, role)
+  }
 }
 

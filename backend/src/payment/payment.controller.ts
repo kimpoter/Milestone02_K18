@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { Public } from 'src/common/decorators';
+import { GetCurrentUserRole, Public } from 'src/common/decorators';
 import { CreatePaymentDto } from './dto';
 import { PaymentService } from './payment.service';
 
@@ -15,16 +15,14 @@ export class PaymentController {
   }
 
   // Create new payment method
-  @Public()
   @Post()
-  async createPaymentMethod(@Body() dto: CreatePaymentDto) {
-    return await this.paymentService.createPaymentMethod(dto)
+  async createPaymentMethod(@Body() dto: CreatePaymentDto, @GetCurrentUserRole() role: string) {
+    return await this.paymentService.createPaymentMethod(dto, role)
   }
 
   // Delete a paymnet menthod
-  @Public()
   @Delete('/:id')
-  async deletePaymentMethod(@Param('id') paymentId: number) {
-    return await this.paymentService.deletePaymentMethod(+paymentId)
+  async deletePaymentMethod(@Param('id') paymentId: number, @GetCurrentUserRole() role: string) {
+    return await this.paymentService.deletePaymentMethod(+paymentId, role)
   }
 }

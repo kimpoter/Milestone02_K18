@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePaymentDto } from './dto';
 
@@ -17,7 +17,10 @@ export class PaymentService {
   }
 
   // Create new payment method
-  async createPaymentMethod(dto: CreatePaymentDto) {
+  async createPaymentMethod(dto: CreatePaymentDto, role: string) {
+    if (role !== 'ADMIN') {
+      throw new UnauthorizedException('Unauthorized')
+    }
     try {
       await this.prisma.paymentMethod.create({
         data: {
@@ -35,7 +38,10 @@ export class PaymentService {
   }
 
   // Delete a payment method
-  async deletePaymentMethod(paymentId: number) {
+  async deletePaymentMethod(paymentId: number, role: string) {
+    if (role !== 'ADMIN') {
+      throw new UnauthorizedException('Unauthorized')
+    }
     try {
       await this.prisma.paymentMethod.delete({
         where: {
