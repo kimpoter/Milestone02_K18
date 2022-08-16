@@ -10,8 +10,8 @@ export class ReviewService {
   // Get Review
   async getReview(id) {
     const dataReview = await this.prisma.review.findMany({
-      where: {tempatMakanId : id }});
-        
+      where: { tempatMakanId: id }
+    });
 
     return {
       status: 'success',
@@ -22,16 +22,14 @@ export class ReviewService {
 
   // Create Review
   async createReview(dto: CreateReview) {
-    
-
-    // Save tmepat makan data to the database
+    // Save review data to the database
     try {
       await this.prisma.review.create({
         data: {
           userId: 1,
-          tempatMakanId : dto.tempatMakanId,
-          content : dto.content,
-          rating : dto.rating
+          tempatMakanId: dto.tempatMakanId,
+          content: dto.content,
+          rating: dto.rating
         },
       })
     } catch (error) {
@@ -43,7 +41,7 @@ export class ReviewService {
     }
   }
 
- 
+
   // Delete Review
   async deleteReview(tempatMakanId: number) {
     try {
