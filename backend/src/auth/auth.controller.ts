@@ -31,13 +31,17 @@ export class AuthController {
     // Set the access_token in cookie
     res.cookie("ITBFood_AT", access_token, {
       maxAge: 24 * 60 * 60 * 1000, // 1 minute
-      httpOnly: true
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
     })
 
     // Set the refresh_token in cookie
     res.cookie("ITBFood_RT", refresh_token, {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
-      httpOnly: true
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
     })
 
     return {
@@ -56,13 +60,17 @@ export class AuthController {
     // Set the access_token in cookie
     res.cookie("ITBFood_AT", access_token, {
       maxAge: 24 * 60 * 60 * 1000, // 1 minute
-      httpOnly: true
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
     })
 
     // Set the refresh_token in cookie
     res.cookie("ITBFood_RT", refresh_token, {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
-      httpOnly: true
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
     })
 
     return {
@@ -73,7 +81,19 @@ export class AuthController {
 
   @Post("signout")
   @HttpCode(HttpStatus.OK)
-  signOut(@GetCurrentUserEmail() email: string) {
+  signOut(@GetCurrentUserEmail() email: string, @Res({ passthrough: true }) res: Response) {
+    res.cookie("ITBFood_AT", '', {
+      maxAge: -1,
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none'
+    })
+    res.cookie("ITBFood_RT", '', {
+      maxAge: -1,
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none'
+    })
     return this.authService.signOut(email);
   }
 
@@ -92,13 +112,17 @@ export class AuthController {
     // Set the access_token in cookie
     res.cookie("ITBFood_AT", access_token, {
       maxAge: 24 * 60 * 60 * 1000, // 1 minute
-      httpOnly: true
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
     })
 
     // Set the refresh_token in cookie
     res.cookie("ITBFood_RT", refresh_token, {
       maxAge: 7 * 24 * 60 * 60 * 1000, // 1 week
-      httpOnly: true
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
     })
 
     return {

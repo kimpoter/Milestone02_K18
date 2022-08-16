@@ -2,12 +2,22 @@ import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import * as cookieParser from "cookie-parser";
+import * as session from "express-session";
 // import { AtGuard } from "./common/guards";
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: false,
+    cookie: {
+      sameSite: 'none',
+      secure: true,
+    }
+  }))
   app.enableCors({
-    origin: process.env.CORS_URL || 'http://localhost:3000',
+    origin: ['http://localhost:3000'],
     credentials: true
   })
   app.useGlobalPipes(new ValidationPipe());
