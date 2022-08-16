@@ -10,7 +10,15 @@ export class ReviewService {
   // Get Review
   async getReview(id) {
     const dataReview = await this.prisma.review.findMany({
-      where: { tempatMakanId: id }
+      where: { tempatMakanId: id },
+      include: {
+        user: {
+          select: {
+            id: true,
+            username: true
+          }
+        }
+      }
     });
 
     return {
