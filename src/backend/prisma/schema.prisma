@@ -1,0 +1,139 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id Int @id @default(autoincrement())
+
+  tempatMakan TempatMakan[]
+  reviews     Review[]
+  bookmarks   Bookmark[]
+
+  username           String  @unique
+  email              String  @unique
+  hashedPassword     String
+  hashedRefreshToken String?
+  role               Role?   @default(USER)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TempatMakan {
+  id Int @id @default(autoincrement())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+
+  menus          Menu[]
+  categories     Category[]
+  paymentMethods PaymentMethod[]
+  platforms      Platform[]
+  reviews        Review[]
+  bookmarks      Bookmark[]
+
+  name        String
+  description String?
+  imageUrl    String?
+  price       Int
+  address     String?
+  latitude    Float?
+  longitude   Float?
+  timeOpen    String?
+  timeClose   String?
+  distance    Float?
+  rating      Float?
+  campus      Campus
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Menu {
+  id Int @id @default(autoincrement())
+
+  tempatMakanId Int
+  tempatMakan   TempatMakan @relation(fields: [tempatMakanId], references: [id])
+
+  imageUrl    String?
+  description String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id Int @id @default(autoincrement())
+
+  tempatMakan TempatMakan[]
+
+  name String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PaymentMethod {
+  id Int @id @default(autoincrement())
+
+  tempatMakan TempatMakan[]
+
+  name String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Platform {
+  id Int @id @default(autoincrement())
+
+  tempatMakan TempatMakan[]
+
+  name String @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Review {
+  id Int @id @default(autoincrement())
+
+  userId        Int?
+  user          User?       @relation(fields: [userId], references: [id])
+  tempatMakanId Int
+  tempatMakan   TempatMakan @relation(fields: [tempatMakanId], references: [id])
+
+  content String
+  rating  Float?
+
+  createdAt DateTime @default(now())
+}
+
+model Bookmark {
+  id Int @id @default(autoincrement())
+
+  userId        Int
+  user          User        @relation(fields: [userId], references: [id])
+  tempatMakanId Int
+  tempatMakan   TempatMakan @relation(fields: [tempatMakanId], references: [id])
+
+  createdAt DateTime @default(now())
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum Campus {
+  GANESHA
+  JATINANGOR
+}

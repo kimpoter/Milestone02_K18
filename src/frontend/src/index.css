@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .btn-primary {
+        @apply bg-secondary text-white rounded-[69px] sm:px-6 px-4 py-1 sm:text-base text-sm font-medium
+    }
+    .card {
+        @apply bg-white text-primary shadow-[0_0_29px_0_rgba(0,0,0,0.25)] px-10 py-12 w-fit rounded-[36px] sm:min-w-[450px]
+    }
+    .form-input {
+        @apply shadow-[0_0_4px_0_rgba(0,0,0,0.25)] rounded-[10px] px-4 py-2
+    }
+    .chips-primary {
+        @apply bg-secondary text-white px-6 py-1 rounded-[69px] shadow-[0_0_18px_0_rgba(0,0,0,0.25)] w-fit
+    }
+    .chips-secondary {
+        @apply bg-white px-6 py-1 rounded-[69px] shadow-[0_0_18px_0_rgba(0,0,0,0.25)] w-fit
+    }
+    h1 {
+        @apply font-semibold sm:text-3xl text-xl
+    }
+    h2 {
+        @apply font-semibold sm:text-xl text-lg
+    }
+    h3 {
+        @apply font-semibold sm:text-base text-sm
+    }
+    li {
+        @apply sm:text-base text-sm
+    }
+    p {
+        @apply sm:text-base text-sm opacity-50
+    }
+    a {
+        @apply sm:text-base text-sm
+    }
+}
