@@ -12,8 +12,8 @@ async function bootstrap() {
     resave: true,
     saveUninitialized: false,
     cookie: {
-      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
-      secure: process.env.NODE_ENV === 'production'
+      sameSite: process.env.NODE_ENV === 'production' ? 'lax' : 'none',
+      secure: process.env.NODE_ENV !== 'production'
     }
   }))
   app.enableCors({
