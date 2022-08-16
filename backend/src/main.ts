@@ -2,7 +2,7 @@ import { ValidationPipe } from "@nestjs/common";
 import { NestFactory } from "@nestjs/core";
 import { AppModule } from "./app.module";
 import * as cookieParser from "cookie-parser";
-import session from "express-session";
+import * as session from "express-session";
 // import { AtGuard } from "./common/guards";
 
 async function bootstrap() {
