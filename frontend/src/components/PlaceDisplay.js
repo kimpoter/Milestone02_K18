@@ -22,7 +22,7 @@ function PlaceDisplay({ place_data_url }) {
 
   return (
     <>
-      {placeData.length !== 0 && !loading ? (
+      {placeData && !loading ? (
         <ul className="flex flex-row flex-wrap justify-center">
           {placeData.map((place) => {
             return (
@@ -30,10 +30,7 @@ function PlaceDisplay({ place_data_url }) {
                 {/* TODO: change category, masih hardcode, harusnya nanti untuk get category
                                 dari tempat makan udah ada urlnya dari be 
                             */}
-                <PreviewCard
-                  place={place}
-                  category={["Fast Food", "Ayam", "Sapi", "Burger"]}
-                />
+                <PreviewCard place={place} />
               </Link>
             );
           })}

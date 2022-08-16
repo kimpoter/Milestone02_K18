@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ahooksjs/use-url-state": "^3.5.0",
     "@emotion/react": "^11.10.0",
     "@mantine/core": "^5.1.6",
     "@mantine/dates": "^5.1.6",
@@ -51,7 +52,6 @@
   "devDependencies": {
     "autoprefixer": "^10.4.8",
     "postcss": "^8.4.14",
-    "tailwindcss": "^3.1.7",
-    "proxy": "https://itbfood.herokuapp.com"
+    "tailwindcss": "^3.1.7"
   }
 }
