@@ -28,12 +28,4 @@ export class SignInDto {
   password: string;
 }
 
-export class VerifyAccountDto {
-  @IsNotEmpty()
-  @IsString()
-  token: string;
 
-  @IsNotEmpty()
-  @IsEmail()
-  email: string;
-}

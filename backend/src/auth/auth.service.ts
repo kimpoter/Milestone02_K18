@@ -1,11 +1,10 @@
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import { SignUpDto, SignInDto, VerifyAccountDto } from "./dto";
-import * as bcrypt from "bcrypt";
+import { SignUpDto, SignInDto } from "./dto";
+import * as argon2 from 'argon2'
 import { Tokens } from "./types";
 import { JwtService } from "@nestjs/jwt";
-import { createTransport } from "nodemailer";
-import { v4 as uuidv4 } from "uuid";
+import { User } from "@prisma/client";
 
 @Injectable()
 export class AuthService {
@@ -17,53 +16,30 @@ export class AuthService {
         "Password and confirm password must be same."
       );
     }
+
+    // TODO: Save the user to database
     const hashedPassword = await this.hashData(dto.password);
-    const newUser = await this.prisma.user.create({
-      data: {
-        username: dto.username,
-        email: dto.email,
-        hashedPassword,
-      },
-    });
-
-    // TODO: Create transporter for nodemailer
-    const transporter = createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.APP_EMAIL,
-        pass: process.env.APP_PASS,
-      },
-    });
-
-    // TODO: Create the userVerificationToken to database
-    const verificationToken = uuidv4() + "-" + uuidv4();
+    let newUser: User
     try {
-      const expiresTime = 15 * 60 * 1000; // 15 minutes
-      const hashedVerificationToken = await this.hashData(verificationToken);
-      await this.prisma.userVerificationToken.create({
+      newUser = await this.prisma.user.create({
         data: {
-          expires: new Date(new Date().getTime() + expiresTime),
-          hashedToken: hashedVerificationToken,
-          userId: newUser.id,
+          username: dto.username,
+          email: dto.email,
+          hashedPassword,
         },
       });
-    } catch {
-      throw new ForbiddenException("Internal Server Error");
+    } catch (error) {
+      throw new InternalServerErrorException(error)
     }
 
-    // TODO: Set the nodemailer config
-    const mailOptions = {
-      to: dto.email,
-      subject: "ITBFood Account Verification",
-      html: `${verificationToken}`,
-    };
+    // TODO: Create access and refresh token
+    const tokens = await this.getTokens(newUser.email, newUser.role, newUser.username)
 
-    // TOOD: Send the email to the user
-    transporter.sendMail(mailOptions, async (error) => {
-      if (error) {
-        throw new ForbiddenException(error);
-      }
-    });
+    // TODO: Update user data in database (add refresh token)
+    await this.updateRtHash(newUser.id, tokens.refresh_token)
+
+    // TODO: Return the access and refresh token
+    return tokens
   }
 
   async signInLocal(dto: SignInDto): Promise<Tokens> {
@@ -73,16 +49,20 @@ export class AuthService {
       },
     });
 
-    if (!user) throw new ForbiddenException("Access Denied");
+    if (!user) throw new BadRequestException("Invalid Credentials");
 
-    const passwordMatches = await bcrypt.compare(
-      dto.password,
-      user.hashedPassword
+    const passwordMatches = await argon2.verify(
+      user.hashedPassword,
+      dto.password
     );
-    if (!passwordMatches) throw new ForbiddenException("Access Denied");
+    if (!passwordMatches) throw new BadRequestException("Invalid Credentials")
 
+    // TODO: Generate access and refresh tokens
     const tokens = await this.getTokens(user.email, user.role, user.username);
+
+    // TODO: Update user data in database (add refresh token)
     await this.updateRtHash(user.id, tokens.refresh_token);
+
     return tokens;
   }
 
@@ -107,90 +87,25 @@ export class AuthService {
     };
   }
 
-  async refreshTokens(email: string, rt: string) {
+  async refreshTokens(email: string, rt: string): Promise<Tokens> {
     const user = await this.prisma.user.findUnique({
       where: {
         email,
       },
     });
     if (!user || !user.hashedRefreshToken)
-      throw new ForbiddenException("Access Denied");
+      throw new BadRequestException("Access Denied");
 
-    const rtMatches = bcrypt.compare(rt, user.hashedRefreshToken);
-    if (!rtMatches) throw new ForbiddenException("Access Denied");
+    const rtMatches = argon2.verify(user.hashedRefreshToken, rt);
+    if (!rtMatches) throw new BadRequestException("Access Denied");
 
+    // TODO: Generate access and refresh tokens
     const tokens = await this.getTokens(user.email, user.role, user.username);
+
+    // TODO: Update user data in database (add refresh token)
     await this.updateRtHash(user.id, tokens.refresh_token);
+
     return tokens;
-  }
-
-  async verifyAccount(dto: VerifyAccountDto) {
-    // TODO: Get the current user data for making the token later
-    const user = await this.prisma.user.findUnique({
-      where: {
-        email: dto.email,
-      },
-      select: {
-        id: true,
-        username: true,
-        email: true,
-        role: true,
-      },
-    });
-
-    // TODO: Check if the token with the current email is exist or not
-    const hashedUserVerificationTokenArray =
-      await this.prisma.userVerificationToken.findMany({
-        where: {
-          user: {
-            email: dto.email,
-          },
-        },
-      });
-
-    if (hashedUserVerificationTokenArray.length === 0)
-      throw new ForbiddenException("Token does not exist");
-    const hashedUserVerificationToken = hashedUserVerificationTokenArray[0];
-
-    // TODO: Check if the token is valid or not
-    const tokenMatches = await bcrypt.compare(
-      dto.token,
-      hashedUserVerificationToken.hashedToken
-    );
-    if (!tokenMatches) return new ForbiddenException("Invalid token");
-
-    // TODO: Check if the token is expired or not
-    let isExpires = false;
-    if (hashedUserVerificationToken.expires.getTime() < new Date().getTime())
-      isExpires = true;
-    if (isExpires) return new ForbiddenException("Token expired");
-
-    // TODO:  Update isVerified column of User Table in database
-    // TODO: Delete the userVerificationToken in database
-    try {
-      await this.prisma.user.update({
-        where: {
-          email: dto.email,
-        },
-        data: {
-          isVerified: true,
-        },
-      });
-      await this.prisma.userVerificationToken.deleteMany({
-        where: {
-          user: {
-            email: dto.email,
-          },
-        },
-      });
-    } catch {
-      throw new ForbiddenException("Internal server error");
-    }
-
-    // TODO: Create the access and refresh token then returned it
-    const tokens = await this.getTokens(user.email, user.role, user.username);
-    await this.updateRtHash(user.id, tokens.refresh_token);
-    return tokens.access_token;
   }
 
   async updateRtHash(userId: number, rt: string) {
@@ -206,7 +121,7 @@ export class AuthService {
   }
 
   hashData(data: string) {
-    return bcrypt.hash(data, 10);
+    return argon2.hash(data);
   }
 
   async getTokens(
@@ -222,8 +137,8 @@ export class AuthService {
           username,
         },
         {
-          secret: "0d553a9c-9bf1-4f3c-812f-252df640e435",
-          expiresIn: 30, // 30 seconds
+          secret: process.env.AT_SECRET,
+          expiresIn: 60, // 60 seconds
         }
       ),
       this.jwtService.signAsync(
@@ -233,7 +148,7 @@ export class AuthService {
           username,
         },
         {
-          secret: "58ec3eac-6d8e-4caf-8ca0-1de865090745",
+          secret: process.env.RT_SECRET,
           expiresIn: 60 * 60 * 24 * 7, // 1 week
         }
       ),
