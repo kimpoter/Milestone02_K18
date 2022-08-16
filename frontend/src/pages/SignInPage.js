@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import axios from "../api/axios";
 
-const REGISTER_URL = `/auth/signin`;
+const LOGIN_URL = `/auth/signin`;
 // TODO: buat components Form
 function SignInPage() {
   const emailRef = React.useRef(null);
@@ -18,7 +18,7 @@ function SignInPage() {
     setLoading(true);
     try {
       const res = await axios.post(
-        REGISTER_URL,
+        LOGIN_URL,
         JSON.stringify({ email, password }),
         {
           headers: { "Content-Type": "application/json" },

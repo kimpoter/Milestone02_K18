@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import React, { useState } from "react";
+import axios from "../api/axios";
 
+const REGISTER_URL = `/auth/signup`;
 function SignUpPage() {
   const usernameRef = React.useRef(null);
   const emailRef = React.useRef(null);
@@ -8,28 +10,34 @@ function SignUpPage() {
   const confirmPWRef = React.useRef(null);
   const [loading, setLoading] = useState(false);
 
-  function onSubmit(e) {
+  async function onSubmit(e) {
     e.preventDefault();
 
     const username = usernameRef.current.value;
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
-    const confirmPW = confirmPWRef.current.value;
+    const confirmPassword = confirmPWRef.current.value;
 
     setLoading(true);
-    fetch(`${process.env.REACT_APP_SERVER_URL}/auth/signup`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        username: username,
-        email: email,
-        password: password,
-        confirmPassword: confirmPW,
-      }),
-    })
-      .catch((error) => console.log(error))
-      .then((res) => res.json())
-      .then((res) => console.log(res));
+    try {
+      const res = await axios.post(
+        REGISTER_URL,
+        JSON.stringify({ username, email, password, confirmPassword }),
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+      console.log(res);
+    } catch (err) {
+      if (!err?.res) {
+        console.log("No Server Response");
+      } else if (err.res?.status === 409) {
+        console.log("Username Taken");
+      } else {
+        console.log("Registration Failed");
+      }
+    }
 
     setLoading(false);
   }
