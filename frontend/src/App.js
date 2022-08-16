@@ -11,6 +11,7 @@ import SearchResult from "./pages/SearchResult";
 import UserSettingPage from "./pages/UserSettingPage";
 import CampusContext from "./CampusContext";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
+import { PrivateRoute, PublicRoute, AdminRoute } from "./routes/Routes";
 
 function App() {
   const [dropdownState, setDropdownState] = useState(false);
@@ -29,18 +30,54 @@ function App() {
         <Routes>
           <Route exact path="/" element={<LandingPage campus={campus} />} />
           <Route exact path="/place-detail/:id" element={<PlaceDetailPage />} />
-          <Route exact path="/signin" element={<SignInPage />} />
-          <Route exact path="/signup" element={<SignUpPage />} />
-          <Route exact path="/bookmark" element={<BookmarkPage />} />
+          <Route
+            exact
+            path="/signin"
+            element={
+              <PublicRoute>
+                <SignInPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            exact
+            path="/signup"
+            element={
+              <PublicRoute>
+                <SignUpPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            exact
+            path="/user/bookmark"
+            element={
+              <PrivateRoute>
+                <BookmarkPage />
+              </PrivateRoute>
+            }
+          />
           <Route
             path={`/tempat-makan/campus/${campus}`}
             element={<SearchResult />}
           />
-          <Route exact path="/user/setting" element={<UserSettingPage />} />
+          <Route
+            exact
+            path="/user"
+            element={
+              <PrivateRoute>
+                <UserSettingPage />
+              </PrivateRoute>
+            }
+          />
           <Route
             exact
             path="/admin/dashboard"
-            element={<AdminDashboardPage />}
+            element={
+              <AdminRoute>
+                <AdminDashboardPage />
+              </AdminRoute>
+            }
           />
         </Routes>
       </div>

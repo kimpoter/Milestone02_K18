@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import axios from "../api/axios";
+import { useNavigate } from "react-router-dom";
+import AuthContext from "../AuthContext";
 
 const LOGIN_URL = `/auth/signin`;
 // TODO: buat components Form
@@ -8,6 +10,8 @@ function SignInPage() {
   const emailRef = React.useRef(null);
   const passwordRef = React.useRef(null);
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const { setCurrentUser } = useContext(AuthContext);
 
   async function onSubmit(e) {
     e.preventDefault();
@@ -15,8 +19,8 @@ function SignInPage() {
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
 
-    setLoading(true);
     try {
+      setLoading(true);
       const res = await axios.post(
         LOGIN_URL,
         JSON.stringify({ email, password }),
@@ -26,6 +30,11 @@ function SignInPage() {
         }
       );
       console.log(res);
+      localStorage.setItem("ACCESS_TOKEN", res.data.tokens.access_token);
+      localStorage.setItem("REFRESH_TOKEN", res.data.tokens.refresh_token);
+      setCurrentUser({ loggedIn: true });
+      setLoading(false);
+      navigate("/", { replace: true });
     } catch (err) {
       if (!err?.res) {
         console.log("No Server Response");
@@ -35,7 +44,6 @@ function SignInPage() {
         console.log("Registration Failed");
       }
     }
-
     setLoading(false);
   }
 

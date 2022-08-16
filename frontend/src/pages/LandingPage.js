@@ -5,7 +5,7 @@ import SearchFilter from "../components/SearchFilter";
 
 const PLACE_URL = {
   GANESHA: `${process.env.REACT_APP_SERVER_URL}/tempat-makan/campus/ganesha?sort_status=asc&sort_data=rating`,
-  JATINAGOR: `${process.env.REACT_APP_SERVER_URL}/tempat-makan/campus/jatinagor?sort_status=asc&sort_data=rating`,
+  JATINANGOR: `${process.env.REACT_APP_SERVER_URL}/tempat-makan/campus/jatinangor?sort_status=asc&sort_data=rating`,
 };
 
 function LandingPage() {

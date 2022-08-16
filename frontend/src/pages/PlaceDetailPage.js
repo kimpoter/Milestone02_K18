@@ -11,6 +11,7 @@ function PlaceDetailPage() {
   const [modalState, setModalState] = useState({ url: null });
   const [placeReview, setPlaceReview] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [menuUrl, setMenuUrl] = useState("placeholder.jpg");
 
   useEffect(() => {
     setLoading(true);
@@ -19,8 +20,6 @@ function PlaceDetailPage() {
         return res.json();
       })
       .then((res) => {
-        console.log(res);
-
         if (res.status === "success") {
           setPlaceData(res.data);
         } else {
@@ -31,21 +30,33 @@ function PlaceDetailPage() {
   }, [id]);
 
   useEffect(() => {
-    setLoading(true);
     fetch(`${process.env.REACT_APP_SERVER_URL}/review/${id}`)
+      .then((res) => {
+        return res.json();
+      })
+      .then((res) => {
+        if (res.status === "success") {
+          setPlaceReview(res.data);
+        } else {
+          window.alert(res.status);
+        }
+      });
+  }, [id]);
+
+  useEffect(() => {
+    fetch(`${process.env.REACT_APP_SERVER_URL}/menu/${id}`)
       .then((res) => {
         return res.json();
       })
       .then((res) => {
         console.log(res);
         if (res.status === "success") {
-          setPlaceReview(res.data);
+          setMenuUrl(res.data[0].imageUrl);
         } else {
           window.alert(res.status);
         }
-      })
-      .finally(() => setLoading(false));
-  }, [id]);
+      });
+  });
 
   return (
     <>
@@ -94,11 +105,11 @@ function PlaceDetailPage() {
             <button
               onClick={() =>
                 setModalState({
-                  url: "http://infohargamenu.com/wp-content/uploads/2017/11/Menu-Reguler-McD.jpg",
+                  url: menuUrl,
                 })
               }
             >
-              <MenuContainer menuImageUrl="http://infohargamenu.com/wp-content/uploads/2017/11/Menu-Reguler-McD.jpg" />
+              <MenuContainer menuImageUrl={menuUrl} />
             </button>
           </div>
           <div className="flex flex-col gap-3 mt-8 space-y-2">

@@ -33,6 +33,10 @@ function Rating({ rating, position }) {
     </div>
   );
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> c7cee9d (fix bugs and finishing)
 export function ReviewCard({ reviews }) {
   return (
     <div className="card py-6 sm:text-base text-sm flex flex-col w-full mt-6">

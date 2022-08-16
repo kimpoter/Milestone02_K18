@@ -17,7 +17,7 @@ function AdminDashboardPage() {
   const [categoryData, setCategoryData] = useState(categories);
   const [platformData, setPlatformData] = useState(platforms);
   const [paymentMethodsData, setPaymentMethodsData] = useState(paymentMethods);
-  const [loadig, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const form = useForm({
     initialValues: {
