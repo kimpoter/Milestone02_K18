@@ -1,5 +1,4 @@
 import { FaStar } from "react-icons/fa";
-import { useEffect, useState } from "react";
 
 function ReviewRating(props) {
   return (
@@ -47,26 +46,7 @@ export function ReviewCard({ reviews }) {
   );
 }
 
-function ReviewDisplay({ id }) {
-  const [placeReview, setPlaceReview] = useState([]);
-
-  useEffect(() => {
-    fetch("http://localhost:8000/review")
-      .then((res) => {
-        return res.json();
-      })
-      .then((data) => {
-        const newPlaceReview = [];
-        data.forEach((element) => {
-          if (element.tempatMakanId === parseInt(id)) {
-            newPlaceReview.push(element);
-            return;
-          }
-        });
-        setPlaceReview(newPlaceReview);
-      });
-  }, [id]);
-
+function ReviewDisplay({ placeReview }) {
   return (
     <ul className="flex flex-col">
       {placeReview.map((review) => {
