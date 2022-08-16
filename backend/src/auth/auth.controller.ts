@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   HttpCode,
   HttpStatus,
   Post,
@@ -11,6 +12,9 @@ import { Response } from "express";
 import {
   GetCurrentUser,
   GetCurrentUserEmail,
+  GetCurrentUserId,
+  GetCurrentUserRole,
+  GetCurrentUserUsername,
   Public,
 } from "src/common/decorators";
 import { RtGuard } from "src/common/guards";
@@ -20,6 +24,19 @@ import { SignInDto, SignUpDto } from "./dto";
 @Controller("auth")
 export class AuthController {
   constructor(private authService: AuthService) { }
+
+  @Get('/user')
+  async getCurrentUserData(@GetCurrentUserEmail() email: string, @GetCurrentUserId() userId: number, @GetCurrentUserRole() role: string, @GetCurrentUserUsername() username: string) {
+    return {
+      status: 'success',
+      data: {
+        userId,
+        username,
+        email,
+        role,
+      }
+    }
+  }
 
   @Public()
   @Post("signup")
