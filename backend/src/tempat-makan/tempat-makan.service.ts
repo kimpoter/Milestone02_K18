@@ -255,9 +255,8 @@ export class TempatMakanService {
     }
 
     // Save tmepat makan data to the database
-    let dataTempatMakan;
     try {
-      dataTempatMakan = await this.prisma.tempatMakan.create({
+      await this.prisma.tempatMakan.create({
         data: {
           name: dto.name,
           description: dto.description,
@@ -282,34 +281,6 @@ export class TempatMakanService {
           },
           userId,
         },
-      })
-    } catch (error) {
-      throw new InternalServerErrorException(error)
-    }
-
-    // calculate rating
-    const dataReview = await this.prisma.review.findMany({
-      where: {
-        tempatMakanId: dataTempatMakan.id
-      }
-    })
-    let totalRating = 0
-    dataReview.map((review) => {
-      totalRating += review.rating
-    })
-
-    let ratingTempatMakan
-    if (dataReview.length) ratingTempatMakan = totalRating / (dataReview.length)
-
-    // Update rating tempat makan
-    try {
-      await this.prisma.tempatMakan.update({
-        where: {
-          id: dataTempatMakan.id
-        },
-        data: {
-          rating: ratingTempatMakan
-        }
       })
     } catch (error) {
       throw new InternalServerErrorException(error)

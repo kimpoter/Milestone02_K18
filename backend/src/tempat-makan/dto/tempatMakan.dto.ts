@@ -42,9 +42,6 @@ export class CreateTempatMakanDto {
   @IsNumber()
   distance: number
 
-  @IsNumber()
-  rating: number
-
   @IsString()
   platform: string
 
