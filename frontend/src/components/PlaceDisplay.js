@@ -14,7 +14,6 @@ function PlaceDisplay({ place_data_url }) {
         return res.json();
       })
       .then((res) => {
-        console.log(res.data);
         setPlaceData(res.data);
       })
       .finally(() => setLoading(false));

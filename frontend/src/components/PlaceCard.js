@@ -4,7 +4,8 @@ import {
   BsFillBookmarkPlusFill,
   BsFillBookmarkFill,
 } from "react-icons/bs";
-import { useState } from "react";
+import { useState, useContext } from "react";
+import AuthContext from "../AuthContext";
 
 function formatTimeToLocalTime(timestamp) {
   var timestamp_formatter = new Date(timestamp);
@@ -54,6 +55,7 @@ export function PreviewCard({ place }) {
 // TODO: Link to Google Maps and Bookmark
 export function DetailCard({ place }) {
   const [isBookmark, setIsBookmark] = useState(false);
+  const { currentUser } = useContext(AuthContext);
 
   /*function addBookmark(e) {
     e.preventDefault();
@@ -81,12 +83,14 @@ export function DetailCard({ place }) {
         alt="placeholder"
         className="rounded-xl aspect-[4/3] object-cover w-[400px] mr-8"
       />
-      <button
-        onClick={() => setIsBookmark(!isBookmark)}
-        className="absolute top-0 left-12 text-6xl"
-      >
-        {isBookmark ? <BsFillBookmarkFill /> : <BsFillBookmarkPlusFill />}
-      </button>
+      {currentUser.loggedIn && (
+        <button
+          onClick={() => setIsBookmark(!isBookmark)}
+          className="absolute top-0 left-12 text-6xl"
+        >
+          {isBookmark ? <BsFillBookmarkFill /> : <BsFillBookmarkPlusFill />}
+        </button>
+      )}
       <div className="space-y-2 lg:mt-0 mt-4">
         <div className="flex sm:flex-row flex-col sm:space-x-4 sm:space-y-0 space-y-2 sm:items-center">
           <Rating rating={place.rating} />

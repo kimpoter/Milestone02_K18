@@ -1,18 +1,5 @@
 import { FaStar } from "react-icons/fa";
 
-function ReviewRating(props) {
-  return (
-    <div className="flex flex-row gap-0.5 mt-0.4">
-      {[...Array(props.rating)].forEach((star) => {
-        return <FaStar size={20} color={"#ffc107"} />;
-      })}
-      {[...Array(5 - props.rating)].forEach((star) => {
-        return <FaStar size={20} color={"#e4e5e9"} />;
-      })}
-    </div>
-  );
-}
-
 function formatTimeToDate(timestamp) {
   var months = [
     "January",
@@ -33,14 +20,27 @@ function formatTimeToDate(timestamp) {
     months[now.getMonth()] + " " + now.getDate() + ", " + now.getFullYear()
   );
 }
+
+function Rating({ rating, position }) {
+  return (
+    <div
+      className={`flex flex-row items-center space-x-2 bg-[#F2BE22] w-fit px-3 text-white rounded-lg font-semibold h-fit ${position}`}
+    >
+      <h3>
+        <FaStar />
+      </h3>
+      <h3>{rating}</h3>
+    </div>
+  );
+}
 export function ReviewCard({ reviews }) {
   return (
     <div className="card py-6 sm:text-base text-sm flex flex-col w-full mt-6">
       <div className="flex flex-row justify-between">
-        <ReviewRating rating={reviews.rating} id={reviews.id} />
         <p>{formatTimeToDate(reviews.createdAt)}</p>
+        <Rating rating={reviews.rating} />
       </div>
-      <h2 className="sm:text-base text-sm mt-1">{reviews.userId}</h2>
+      <h2 className="sm:text-base text-sm mt-1">{reviews.user.username}</h2>
       <p>{reviews.content}</p>
     </div>
   );

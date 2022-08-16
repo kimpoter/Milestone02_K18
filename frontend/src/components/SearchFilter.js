@@ -9,6 +9,7 @@ const PLACE_URL = {
   JATINAGOR: `/tempat-makan/campus/jatinagor?sort_status=asc&sort_data=rating`,
 };
 
+
 function SearchFilter({ preventDefault }) {
   const [filterDisplay, setFilterDisplay] = useState(false);
   const { campus } = useContext(CampusContext);
