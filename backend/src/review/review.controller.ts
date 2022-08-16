@@ -10,10 +10,9 @@ export class ReviewController {
   // Get review
   @Public()
   @Get('/:id')
-  getReview(@Param('id') id:number) {
-    return this.reviewService.getReview(+id)
+  getReview(@Param('id') tempatMakanId: number) {
+    return this.reviewService.getReview(+tempatMakanId)
   }
-
 
   // Create review
   @Public()
@@ -22,12 +21,11 @@ export class ReviewController {
     return this.reviewService.createReview(dto)
   }
 
-
   // Delete review
   @Public()
   @Delete(':id')
-  deleteReview(@Param('id') id: number) {
-    return this.reviewService.deleteReview(+id)
+  deleteReview(@Param('id') reviewId: number) {
+    return this.reviewService.deleteReview(+reviewId)
   }
 
 }
