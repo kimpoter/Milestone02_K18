@@ -9,6 +9,21 @@ import { JwtService } from "@nestjs/jwt";
 export class AuthService {
   constructor(private prisma: PrismaService, private jwtService: JwtService) { }
 
+  async getUserData(userId: number) {
+    return await this.prisma.user.findMany({
+      where: {
+        id: userId
+      },
+      select: {
+        username: true,
+        email: true,
+        role: true,
+        bookmarks: true,
+        reviews: true,
+      }
+    })
+  }
+
   async signUpLocal(dto: SignUpDto) {
     if (dto.confirmPassword !== dto.password) {
       throw new ForbiddenException(

@@ -13,8 +13,6 @@ import {
   GetCurrentUser,
   GetCurrentUserEmail,
   GetCurrentUserId,
-  GetCurrentUserRole,
-  GetCurrentUserUsername,
   Public,
 } from "src/common/decorators";
 import { RtGuard } from "src/common/guards";
@@ -26,14 +24,17 @@ export class AuthController {
   constructor(private authService: AuthService) { }
 
   @Get('/user')
-  async getCurrentUserData(@GetCurrentUserEmail() email: string, @GetCurrentUserId() userId: number, @GetCurrentUserRole() role: string, @GetCurrentUserUsername() username: string) {
+  async getCurrentUserData(@GetCurrentUserId() userId: number) {
+    const dataUser = await this.authService.getUserData(userId)
     return {
       status: 'success',
       data: {
         userId,
-        username,
-        email,
-        role,
+        username: dataUser[0].username,
+        email: dataUser[0].email,
+        role: dataUser[0].role,
+        reviews: dataUser[0].reviews,
+        bookmarks: dataUser[0].bookmarks
       }
     }
   }
