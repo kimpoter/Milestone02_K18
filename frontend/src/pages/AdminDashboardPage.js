@@ -2,24 +2,29 @@ import {
   TextInput,
   Textarea,
   Select,
-  Chip,
   NumberInput,
   MultiSelect,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { TimeInput } from "@mantine/dates";
-import { useState, useEffect } from "react";
+import { useState, useContext } from "react";
+import PlaceContext from "../PlaceContext";
+import axios from "../api/axios";
+const ADD_PLACE_URL = `/tempat-makan`;
 
 function AdminDashboardPage() {
-  const [categoryData, setCategoryData] = useState([]);
-  const [platformData, setPlatformData] = useState([]);
-  const [paymentMethodsData, setPaymentMethodsData] = useState([]);
+  const { categories, platforms, paymentMethods } = useContext(PlaceContext);
+  const [categoryData, setCategoryData] = useState(categories);
+  const [platformData, setPlatformData] = useState(platforms);
+  const [paymentMethodsData, setPaymentMethodsData] = useState(paymentMethods);
+  const [loading, setLoading] = useState(false);
 
   const form = useForm({
     initialValues: {
       name: "",
       description: "",
       imageUrl: "",
+      menuImageUrl: "",
       price: "",
       address: "",
       latitude: "",
@@ -35,21 +40,32 @@ function AdminDashboardPage() {
     },
   });
 
-  useEffect(() => {
-    fetch(`${process.env.REACT_APP_SERVER_URL}/category`)
-      .then((res) => {
-        return res.json();
-      })
-      .then((res) => {
-        setCategoryData(res.data);
+  async function onSubmit(values) {
+    setLoading(true);
+    try {
+      const res = await axios.post(ADD_PLACE_URL, JSON.stringify(values), {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
       });
-  }, []);
+      console.log(res);
+    } catch (err) {
+      if (!err?.res) {
+        console.log("No Server Response");
+      } else if (err.res?.status === 409) {
+        console.log("Username Taken");
+      } else {
+        console.log("Registration Failed");
+      }
+    }
+
+    setLoading(false);
+  }
 
   return (
     <div className="flex justify-center items-center h-[calc(100vh-104px)] my-64">
       <div className="card">
         <form
-          onSubmit={form.onSubmit((values) => console.log(values))}
+          onSubmit={form.onSubmit((values) => onSubmit(values))}
           className="space-y-4"
         >
           <TextInput
@@ -66,6 +82,11 @@ function AdminDashboardPage() {
             required
             label="Foto Url"
             {...form.getInputProps("imageUrl")}
+          />
+          <TextInput
+            required
+            label="Foto Menu Url"
+            {...form.getInputProps("menuImageUrl")}
           />
           <NumberInput
             required
@@ -113,6 +134,20 @@ function AdminDashboardPage() {
             {...form.getInputProps("campus")}
           />
           <MultiSelect
+            label="Platform"
+            data={platformData}
+            placeholder="Masukkan platform"
+            searchable
+            creatable
+            getCreateLabel={(query) => `+ Create ${query}`}
+            onCreate={(query) => {
+              const item = { value: query, label: query };
+              setPlatformData((current) => [...current, item]);
+              return item;
+            }}
+            {...form.getInputProps("categories")}
+          />
+          <MultiSelect
             label="Kategori"
             data={categoryData}
             placeholder="Masukkan kategori"
@@ -126,30 +161,20 @@ function AdminDashboardPage() {
             }}
             {...form.getInputProps("categories")}
           />
-          <Chip.Group
-            position="center"
-            multiple
-            mt={15}
-            {...form.getInputProps("paymentMethods")}
-          >
-            <Chip value="cash">cash</Chip>
-            <Chip value="ovo">ovo</Chip>
-            <Chip value="gopay">gopay</Chip>
-            <Chip value="shopeePay">shopeePay</Chip>
-            <Chip value="dana">dana</Chip>
-            <Chip value="transfer">transfer</Chip>
-          </Chip.Group>
-          <Chip.Group
-            position="center"
-            multiple
-            mt={15}
-            {...form.getInputProps("platform")}
-          >
-            <Chip value="langsung">langsung</Chip>
-            <Chip value="shopeeFood">shopeeFood</Chip>
-            <Chip value="goFood">goFood</Chip>
-            <Chip value="grabFood">grabFood</Chip>
-          </Chip.Group>
+          <MultiSelect
+            label="Cara Pembayaran"
+            data={paymentMethodsData}
+            placeholder="Masukkan metode"
+            searchable
+            creatable
+            getCreateLabel={(query) => `+ Create ${query}`}
+            onCreate={(query) => {
+              const item = { value: query, label: query };
+              setPaymentMethodsData((current) => [...current, item]);
+              return item;
+            }}
+            {...form.getInputProps("categories")}
+          />
           <button
             type="submit"
             className="btn-primary sm:text-lg text-base w-full"

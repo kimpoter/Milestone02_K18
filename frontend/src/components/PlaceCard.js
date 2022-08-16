@@ -54,28 +54,9 @@ export function PreviewCard({ place }) {
 
 // TODO: Link to Google Maps and Bookmark
 export function DetailCard({ place }) {
-  const [isBookmark, setIsBookmark] = useState(false);
   const { currentUser } = useContext(AuthContext);
+  const [isBookmark, setIsBookmark] = useState(false);
 
-  /*function addBookmark(e) {
-    e.preventDefault();
-
-    fetch("http://localhost:8000/bookmark", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        userId: currentUser.id,
-        tempatMakanId: place.id,
-        createdAt: "2022-08-06 09:25:22+07",
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        window.alert("Bookmark berhasil ditambahkan.");
-        setIsBookmark(!isBookmark);
-      });
-  } */
   return (
     <div className="relative card w-full sm:text-base text-sm flex lg:flex-row flex-col">
       <img
@@ -97,8 +78,7 @@ export function DetailCard({ place }) {
           <h1>{place.name}</h1>
         </div>
         <p>
-          {formatTimeToLocalTime(place.timeOpen)} -{" "}
-          {formatTimeToLocalTime(place.timeClose)}
+          {place.timeOpen} - {place.timeClose}
         </p>
         {place.categories.forEach((element) => {
           return <p>{element.name}</p>;
@@ -106,8 +86,8 @@ export function DetailCard({ place }) {
         <div className="flex flex-row items-center space-x-4 bg-greyscale px-6 py-2 rounded-lg w-full opacity-50">
           <BsLink45Deg />
           <a
-            href={`https://maps.google.com/?q=<${place.latitude}>,<${place.longitude}>`}
-          >{`https://maps.google.com/?q=<${place.latitude}>,<${place.longitude}>`}</a>
+            href={`https://maps.google.com/?q=${place.latitude},${place.longitude}`}
+          >{`https://maps.google.com/?q=${place.latitude},${place.longitude}`}</a>
         </div>
         <h2>Deskripsi</h2>
         <p>{place.description}</p>

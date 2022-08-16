@@ -8,7 +8,6 @@ function PlaceDisplay({ place_data_url }) {
   useEffect(() => {
     setPlaceData([]);
     setLoading(true);
-    console.log(place_data_url);
     fetch(place_data_url)
       .then((res) => {
         return res.json();
@@ -21,7 +20,7 @@ function PlaceDisplay({ place_data_url }) {
 
   return (
     <>
-      {placeData && !loading ? (
+      {placeData.length !== 0 && !loading ? (
         <ul className="flex flex-row flex-wrap justify-center">
           {placeData.map((place) => {
             return (

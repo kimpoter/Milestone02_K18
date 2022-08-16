@@ -15,7 +15,7 @@ export function PlaceContextProvider(props) {
         return res.json();
       })
       .then((res) => {
-        console.log(res.data);
+        console.log(res);
         setCategories(res.data);
       })
       .finally(() => setLoading(false));
@@ -28,7 +28,7 @@ export function PlaceContextProvider(props) {
         return res.json();
       })
       .then((res) => {
-        console.log(res.data);
+        console.log(res);
         setPlatforms(res.data);
       })
       .finally(() => setLoading(false));
@@ -41,7 +41,7 @@ export function PlaceContextProvider(props) {
         return res.json();
       })
       .then((res) => {
-        console.log(res.data);
+        console.log(res);
         setPaymentMethods(res.data);
       })
       .finally(() => setLoading(false));

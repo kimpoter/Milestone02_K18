@@ -48,7 +48,7 @@ function FilterTab({ searchValue }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    setMinPrice(priceRangeValue ? parseInt(priceRangeValue) : 0);
+    setMinPrice(priceRangeValue);
     if (parseInt(priceRangeValue) !== 50000) {
       setMaxPrice(parseInt(priceRangeValue) + 10000);
     } else {
@@ -62,7 +62,9 @@ function FilterTab({ searchValue }) {
         PLACE_URL[campus]
       }&search=${searchValue}&filter_category=${categoriesValue.join(
         ";"
-      )}&filter_price=${minPrice};${maxPrice}&filter_platform=${platformsValue.join(
+      )}&filter_price=${minPrice ? minPrice : 0};${
+        maxPrice ? maxPrice : 999999
+      }&filter_platform=${platformsValue.join(
         ";"
       )}&filter_payment=${paymentMethodsValue.join(";")}`
     );
@@ -79,13 +81,14 @@ function FilterTab({ searchValue }) {
           multiple
           mt={15}
         >
-          {categories.map((category) => {
-            return (
-              <ul key={category}>
-                <Chip value={category}>{category}</Chip>
-              </ul>
-            );
-          })}
+          {categories.length !== 0 &&
+            categories.map((category) => {
+              return (
+                <ul key={category.id}>
+                  <Chip value={category.name}>{category.name}</Chip>
+                </ul>
+              );
+            })}
         </Chip.Group>
       </div>
 
@@ -100,13 +103,14 @@ function FilterTab({ searchValue }) {
           multiple
           mt={15}
         >
-          {paymentMethods.map((method) => {
-            return (
-              <ul key={method}>
-                <Chip value={method}>{method}</Chip>
-              </ul>
-            );
-          })}
+          {paymentMethods.length !== 0 &&
+            paymentMethods.map((method) => {
+              return (
+                <ul key={method.id}>
+                  <Chip value={method.name}>{method.name}</Chip>
+                </ul>
+              );
+            })}
         </Chip.Group>
       </div>
 
@@ -137,13 +141,14 @@ function FilterTab({ searchValue }) {
           multiple
           mt={15}
         >
-          {platforms.map((platform) => {
-            return (
-              <ul key={platform}>
-                <Chip value={platform}>{platform}</Chip>
-              </ul>
-            );
-          })}
+          {platforms.length !== 0 &&
+            platforms.map((platform) => {
+              return (
+                <ul key={platform.id}>
+                  <Chip value={platform.name}>{platform.name}</Chip>
+                </ul>
+              );
+            })}
         </Chip.Group>
       </div>
 
