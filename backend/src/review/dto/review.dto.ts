@@ -1,10 +1,6 @@
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator'
 
-export class CreateReview {
-  @IsNotEmpty()
-  @IsNumber()
-  tempatMakanId: number;
-  
+export class CreateReviewDto {
   @IsNotEmpty()
   @IsString()
   content: string;

@@ -32,7 +32,7 @@ export class AuthService {
     }
 
     // TODO: Create access and refresh token
-    const tokens = await this.getTokens(newUser.email, newUser.role, newUser.username)
+    const tokens = await this.getTokens(newUser.email, newUser.role, newUser.username, newUser.id)
 
     // TODO: Update user data in database (add refresh token)
     await this.updateRtHash(newUser.id, tokens.refresh_token)
@@ -57,7 +57,7 @@ export class AuthService {
     if (!passwordMatches) throw new BadRequestException("Invalid Credentials")
 
     // TODO: Generate access and refresh tokens
-    const tokens = await this.getTokens(user.email, user.role, user.username);
+    const tokens = await this.getTokens(user.email, user.role, user.username, user.id);
 
     // TODO: Update user data in database (add refresh token)
     await this.updateRtHash(user.id, tokens.refresh_token);
@@ -99,7 +99,7 @@ export class AuthService {
     if (!rtMatches) throw new BadRequestException("Access Denied");
 
     // TODO: Generate access and refresh tokens
-    const tokens = await this.getTokens(user.email, user.role, user.username);
+    const tokens = await this.getTokens(user.email, user.role, user.username, user.id);
 
     // TODO: Update user data in database (add refresh token)
     await this.updateRtHash(user.id, tokens.refresh_token);
@@ -126,7 +126,8 @@ export class AuthService {
   async getTokens(
     email: string,
     role: string,
-    username: string
+    username: string,
+    id: number
   ): Promise<Tokens> {
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(
@@ -134,10 +135,11 @@ export class AuthService {
           email,
           role,
           username,
+          id
         },
         {
           secret: process.env.AT_SECRET,
-          expiresIn: 60, // 60 seconds
+          expiresIn: 24 * 60 * 60, // 1 day
         }
       ),
       this.jwtService.signAsync(
@@ -145,6 +147,7 @@ export class AuthService {
           email,
           role,
           username,
+          id,
         },
         {
           secret: process.env.RT_SECRET,

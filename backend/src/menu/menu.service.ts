@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateMenuDto } from './dto';
 
@@ -6,10 +6,10 @@ import { CreateMenuDto } from './dto';
 export class MenuService {
   constructor(private prisma: PrismaService) { }
 
-  async getMenu(id) {
+  async getMenu(tempatMakanId: number) {
     const dataMenu = await this.prisma.menu.findMany({
       where: {
-        tempatMakanId: id
+        tempatMakanId
       }
     })
 
@@ -19,11 +19,14 @@ export class MenuService {
     }
   }
 
-  async createMenu(dto: CreateMenuDto, id) {
+  async createMenu(dto: CreateMenuDto, tempatMakanId: number, role: string) {
+    if (role !== 'ADMIN') {
+      throw new UnauthorizedException('Unauthorized')
+    }
     try {
       await this.prisma.menu.create({
         data: {
-          tempatMakanId: id,
+          tempatMakanId,
           imageUrl: dto.imageUrl,
           description: dto.description
         }
@@ -34,36 +37,18 @@ export class MenuService {
 
     return {
       status: 'success',
-      message: 'menu has been created'
+      message: 'Menu has been created'
     }
   }
 
-  async updateMenu(dto: CreateMenuDto, id) {
-    try {
-      await this.prisma.menu.update({
-        where: {
-          id
-        },
-        data: {
-          imageUrl: dto.imageUrl,
-          description: dto.description
-        }
-      })
-    } catch (error) {
-      throw new InternalServerErrorException(error)
+  async deleteMenu(menuId: number, role: string) {
+    if (role !== 'ADMIN') {
+      throw new UnauthorizedException('Unauthorized')
     }
-
-    return {
-      status: 'success',
-      message: 'menu has been updated'
-    }
-  }
-
-  async deleteMenu(id) {
     try {
       await this.prisma.menu.delete({
         where: {
-          id
+          id: menuId
         }
       })
     } catch (error) {
@@ -72,7 +57,7 @@ export class MenuService {
 
     return {
       status: 'success',
-      message: 'menu has been deleted'
+      message: 'Menu has been deleted'
     }
   }
 }

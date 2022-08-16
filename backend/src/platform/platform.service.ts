@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { createPlatformDto } from './dto';
 
@@ -17,7 +17,10 @@ export class PlatformService {
   }
 
   // Craete new platform
-  async createPlatform(dto: createPlatformDto) {
+  async createPlatform(dto: createPlatformDto, role: string) {
+    if (role !== 'ADMIN') {
+      throw new UnauthorizedException('Unauthorized')
+    }
     try {
       await this.prisma.platform.create({
         data: {
@@ -35,7 +38,10 @@ export class PlatformService {
   }
 
   // Delete platform
-  async deletePlatform(platformId: number) {
+  async deletePlatform(platformId: number, role: string) {
+    if (role !== 'ADMIN') {
+      throw new UnauthorizedException('Unauthorized')
+    }
     try {
       await this.prisma.platform.delete({
         where: {

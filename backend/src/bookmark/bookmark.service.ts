@@ -1,15 +1,16 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { CreateBookmarkDto } from './dto';
 
 @Injectable()
 export class BookmarkService {
   constructor(private prisma: PrismaService) { }
 
   // Get all Bookmark
-  async getAllBookmark(id) {
+  async getAllBookmark(userId: number) {
     const dataBookmark = await this.prisma.bookmark.findMany({
       where: {
-        userId: id
+        userId
       }
     })
 
@@ -20,12 +21,12 @@ export class BookmarkService {
 
   }
   // Creat Bookmark
-  async createBookmark(id) {
+  async createBookmark(dto: CreateBookmarkDto, userId: number) {
     try {
       await this.prisma.bookmark.create({
         data: {
-          tempatMakanId: id,
-          userId: 1
+          tempatMakanId: dto.tempatMakanId,
+          userId,
         }
       })
     } catch (error) {
@@ -38,11 +39,11 @@ export class BookmarkService {
   }
 
   // Delete Bookmark
-  async deleteBookmark(id: number) {
+  async deleteBookmark(bookmarkId: number) {
     try {
       await this.prisma.bookmark.delete({
         where: {
-          id
+          id: bookmarkId
         }
       })
     } catch (error) {
