@@ -1,6 +1,7 @@
 import { FaStar } from "react-icons/fa";
 import ReactStars from "react-rating-stars-component";
 import { useRef, useState } from "react";
+import axios from "../api/axios";
 
 function DateToday() {
   var months = [
@@ -27,11 +28,35 @@ function DateToday() {
   );
 }
 
-export function ReviewForm() {
-  const [value, setValue] = useState(5);
-  const valueRef = useRef();
-  valueRef.current = value;
+export function ReviewForm({ id }) {
+  const [rating, setRating] = useState(0);
+  const contentRef = useRef();
+  const [loading, setLoading] = useState(false);
 
+  function handleAddForm(e) {
+    e.preventDefault();
+
+    setLoading(true);
+    axios
+      .post(
+        `/review/${id}`,
+        JSON.stringify({
+          tempatMakanId: id.toString(),
+          content: contentRef.current.value,
+          rating: rating,
+        }),
+        {
+          headers: { "Content-Type": "application/json" },
+        }
+      )
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => setLoading(false));
+  }
   return (
     <div className="card py-6 sm:text-base text-sm flex flex-col w-full mt-6">
       <h2>Tulis Review</h2>
@@ -43,10 +68,9 @@ export function ReviewForm() {
             size={20}
             emptyIcon={<FaStar />}
             filledIcon={<FaStar />}
-            onChange={(event, newValue) => {
-              setValue(newValue);
-              // Get the latest state
-              console.log(valueRef.current);
+            onChange={(newRating) => {
+              setRating(newRating);
+              console.log(rating);
             }}
           />
         </div>
@@ -54,18 +78,24 @@ export function ReviewForm() {
           <DateToday />
         </p>
       </div>
-      <form className="flex mt-2">
-        <textarea
-          id="description"
-          required
-          rows="3"
-          placeholder="Tuliskan reviewmu di sini!"
-          className="bg-greyscale rounded-2xl w-full px-6 py-3"
-        ></textarea>
+      <form onSubmit={handleAddForm} className="flex mt-2">
+        <div className="flex flex-col w-full">
+          <textarea
+            id="description"
+            required
+            rows="3"
+            placeholder="Tuliskan reviewmu di sini!"
+            className="bg-greyscale rounded-2xl w-full px-6 py-3"
+            ref={contentRef}
+            disabled={loading}
+          ></textarea>
+          <div className="flex justify-end mt-3">
+            <button type="submit" className="btn-primary items-end">
+              Kirim
+            </button>
+          </div>
+        </div>
       </form>
-      <div className="flex justify-end mt-3">
-        <button className="btn-primary items-end">Kirim</button>
-      </div>
     </div>
   );
 }

@@ -36,4 +36,7 @@
     a {
         @apply sm:text-base text-sm
     }
+    .loading-spinner{
+        @apply w-[50px] h-[50px] border-[10px] border-solid border-greyscale border-t-[10px] border-t-primary animate-spin rounded-full
+      }
 }

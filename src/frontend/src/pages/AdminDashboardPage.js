@@ -8,7 +8,7 @@ import {
 import { useForm } from "@mantine/form";
 import { TimeInput } from "@mantine/dates";
 import { useState, useContext } from "react";
-import PlaceContext from "../PlaceContext";
+import PlaceContext from "../context/PlaceContext";
 import axios from "../api/axios";
 const ADD_PLACE_URL = `/tempat-makan`;
 
@@ -40,14 +40,20 @@ function AdminDashboardPage() {
     },
   });
 
-  async function onSubmit(values) {
+  async function onSubmitTes(values) {
     setLoading(true);
     try {
       const res = await axios.post(ADD_PLACE_URL, JSON.stringify(values), {
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("ACCESS_TOKEN")}`,
+        },
         withCredentials: true,
       });
-      console.log(res);
+      if (res) {
+        console.log(res);
+        setLoading(false);
+      }
     } catch (err) {
       if (!err?.res) {
         console.log("No Server Response");
@@ -57,8 +63,10 @@ function AdminDashboardPage() {
         console.log("Registration Failed");
       }
     }
+  }
 
-    setLoading(false);
+  function onSubmit(values) {
+    console.log(values);
   }
 
   return (

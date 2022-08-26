@@ -1,6 +1,6 @@
 import { FaUserCircle } from "react-icons/fa";
 import { useContext } from "react";
-import AuthContext from "../AuthContext";
+import AuthContext from "../context/AuthContext";
 
 export default function UserSettingPage() {
   const { currentUser } = useContext(AuthContext);

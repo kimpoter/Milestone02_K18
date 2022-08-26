@@ -1,11 +1,11 @@
 import { useContext } from "react";
-import CampusContext from "../CampusContext";
+import CampusContext from "../context/CampusContext";
 import PlaceDisplay from "../components/PlaceDisplay";
 import SearchFilter from "../components/SearchFilter";
 
 const PLACE_URL = {
-  GANESHA: `${process.env.REACT_APP_SERVER_URL}/tempat-makan/campus/ganesha?sort_status=asc&sort_data=rating`,
-  JATINANGOR: `${process.env.REACT_APP_SERVER_URL}/tempat-makan/campus/jatinangor?sort_status=asc&sort_data=rating`,
+  ganesha: `/tempat-makan/campus/ganesha`,
+  jatinangor: `/tempat-makan/campus/jatinangor`,
 };
 
 function LandingPage() {
@@ -18,12 +18,12 @@ function LandingPage() {
       </div>
 
       <SearchFilter />
-      <div className="flex justify-center min-h-[90vh] w-[70vw] bg-greyscale mt-12 py-12 rounded-t-[36px]">
+      <div className="flex justify-center w-[70vw] bg-greyscale mt-12 py-12 rounded-t-[36px]">
         <div className="w-full px-12">
           <div className="flex justify-start">
             <h1 className="text-3xl font-semibold">Rekomendasi Kami</h1>
           </div>
-          <PlaceDisplay place_data_url={PLACE_URL[campus]} />
+          <PlaceDisplay placeUrl={PLACE_URL[campus]} />
         </div>
       </div>
     </div>

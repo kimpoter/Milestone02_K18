@@ -4,47 +4,37 @@ const PlaceContext = createContext();
 
 export function PlaceContextProvider(props) {
   const [loading, setLoading] = useState(false);
-  const [categories, setCategories] = useState([]);
-  const [platforms, setPlatforms] = useState([]);
-  const [paymentMethods, setPaymentMethods] = useState([]);
+  const [categories, setCategories] = useState(null);
+  const [platforms, setPlatforms] = useState(null);
+  const [paymentMethods, setPaymentMethods] = useState(null);
 
   useEffect(() => {
-    setLoading(false);
+    setLoading(true);
     fetch(`${process.env.REACT_APP_SERVER_URL}/category`)
       .then((res) => {
         return res.json();
       })
       .then((res) => {
-        console.log(res);
         setCategories(res.data);
-      })
-      .finally(() => setLoading(false));
-  }, []);
+      });
 
-  useEffect(() => {
-    setLoading(true);
     fetch(`${process.env.REACT_APP_SERVER_URL}/platform`)
       .then((res) => {
         return res.json();
       })
       .then((res) => {
-        console.log(res);
         setPlatforms(res.data);
-      })
-      .finally(() => setLoading(false));
-  }, []);
+      });
 
-  useEffect(() => {
-    setLoading(true);
     fetch(`${process.env.REACT_APP_SERVER_URL}/payment`)
       .then((res) => {
         return res.json();
       })
       .then((res) => {
-        console.log(res);
         setPaymentMethods(res.data);
-      })
-      .finally(() => setLoading(false));
+      });
+
+    setLoading(false);
   }, []);
 
   const value = {

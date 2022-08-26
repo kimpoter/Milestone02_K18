@@ -9,7 +9,7 @@ import PlaceDetailPage from "./pages/PlaceDetailPage";
 import BookmarkPage from "./pages/BookmarkPage";
 import SearchResult from "./pages/SearchResult";
 import UserSettingPage from "./pages/UserSettingPage";
-import CampusContext from "./CampusContext";
+import CampusContext from "./context/CampusContext";
 import AdminDashboardPage from "./pages/AdminDashboardPage";
 import { PrivateRoute, PublicRoute, AdminRoute } from "./routes/Routes";
 
@@ -28,7 +28,7 @@ function App() {
       <ScrollToTop />
       <div className="sm:pt-[100px] pt-[68px] px-16">
         <Routes>
-          <Route exact path="/" element={<LandingPage campus={campus} />} />
+          <Route path="/" element={<LandingPage campus={campus} />} />
           <Route exact path="/place-detail/:id" element={<PlaceDetailPage />} />
           <Route
             exact
@@ -57,10 +57,7 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route
-            path={`/tempat-makan/campus/${campus}`}
-            element={<SearchResult />}
-          />
+          <Route path={`/:campus`} element={<SearchResult />} />
           <Route
             exact
             path="/user"

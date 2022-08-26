@@ -3,37 +3,29 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "../api/axios";
 
-function BookmarkDisplay() {
+function BookmarkDisplay({ placeUrl }) {
   const [placeData, setPlaceData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    setPlaceData([]);
     setLoading(true);
-    const fetchData = async () => {
-      try {
-        const res = await axios.get("/bookmark", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("ACCESS_TOKEN")}`,
-          },
-          withCredentials: true,
-        });
-        console.log(res.data.data);
+    axios
+      .get(placeUrl)
+      .then((res) => {
+        console.log(res);
         setPlaceData(res.data.data);
-        setLoading(false);
-      } catch (err) {
-        console.log(err.res?.status);
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => setLoading(false));
+  }, [placeUrl]);
 
   return (
     <>
-      {placeData.length > 0 && !loading ? (
+      {placeData.length !== 0 && !loading ? (
         <ul className="flex flex-row flex-wrap justify-center">
           {placeData.map((place) => {
-            console.log(place.tempatMakan);
             return (
               <Link
                 to={`/place-detail/${place.tempatMakan.id}`}
@@ -45,8 +37,17 @@ function BookmarkDisplay() {
           })}
         </ul>
       ) : (
-        <div className="w-full text-center mt-64">
-          {loading ? <h3>Loading...</h3> : <h3>No Data Available Right Now</h3>}
+        <div className="w-full text-center min-h-[50vh] flex justify-center">
+          {loading ? (
+            <div className="flex flex-col justify-center items-center space-y-6">
+              <div className="loading-spinner" />
+              <p>Fetching data...</p>
+            </div>
+          ) : (
+            <div className="flex flex-col justify-center items-center space-y-6">
+              <h3>No Data Available Right Now</h3>
+            </div>
+          )}
         </div>
       )}
     </>

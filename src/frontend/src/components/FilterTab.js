@@ -1,8 +1,8 @@
 import { Chip } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CampusContext from "../CampusContext";
-import PlaceContext from "../PlaceContext";
+import CampusContext from "../context/CampusContext";
+import PlaceContext from "../context/PlaceContext";
 
 const priceRange = [
   {
@@ -32,8 +32,8 @@ const priceRange = [
 ];
 
 const PLACE_URL = {
-  GANESHA: `/tempat-makan/campus/ganesha?sort_status=asc&sort_data=rating`,
-  JATINAGOR: `/tempat-makan/campus/jatinagor?sort_status=asc&sort_data=rating`,
+  GANESHA: `/ganesha?`,
+  JATINANGOR: `/jatinangor?`,
 };
 
 function FilterTab({ searchValue }) {
@@ -60,7 +60,7 @@ function FilterTab({ searchValue }) {
     navigate(
       `${
         PLACE_URL[campus]
-      }&search=${searchValue}&filter_category=${categoriesValue.join(
+      }search=${searchValue}&filter_category=${categoriesValue.join(
         ";"
       )}&filter_price=${minPrice ? minPrice : 0};${
         maxPrice ? maxPrice : 999999

@@ -2,9 +2,8 @@ import { Link } from "react-router-dom";
 import React, { useState, useContext } from "react";
 import axios from "../api/axios";
 import { useNavigate } from "react-router-dom";
-import AuthContext from "../AuthContext";
+import AuthContext from "../context/AuthContext";
 
-const REGISTER_URL = `/auth/signup`;
 function SignUpPage() {
   const usernameRef = React.useRef(null);
   const emailRef = React.useRef(null);
@@ -14,7 +13,7 @@ function SignUpPage() {
   const navigate = useNavigate();
   const { setCurrentUser } = useContext(AuthContext);
 
-  async function onSubmit(e) {
+  function handleSubmit(e) {
     e.preventDefault();
 
     const username = usernameRef.current.value;
@@ -23,96 +22,101 @@ function SignUpPage() {
     const confirmPassword = confirmPWRef.current.value;
 
     setLoading(true);
-    try {
-      const res = await axios.post(
-        REGISTER_URL,
+
+    axios
+      .post(
+        `/auth/signup`,
         JSON.stringify({ username, email, password, confirmPassword }),
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
         }
-      );
-      console.log(res);
-      localStorage.setItem("ACCESS_TOKEN", res.data.tokens.access_token);
-      localStorage.setItem("REFRESH_TOKEN", res.data.tokens.refresh_token);
-      setCurrentUser({ loggedIn: true });
-      setLoading(false);
-      navigate("/", { replace: true });
-    } catch (err) {
-      if (!err?.res) {
-        console.log("No Server Response");
-      } else if (err.res?.status === 409) {
-        console.log("Username Taken");
-      } else {
-        console.log("Registration Failed");
-      }
-    }
-
-    setLoading(false);
+      )
+      .then((res) => {
+        console.log(res);
+        localStorage.setItem("ACCESS_TOKEN", res.data.tokens.access_token);
+        setCurrentUser({ loggedIn: true });
+        setLoading(false);
+        navigate("/", { replace: true });
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => setLoading(false));
   }
 
   return (
     <div className="flex justify-center items-center h-[calc(100vh-104px)]">
       <div className="card">
-        <h1 className="sm:text-3xl text-2xl font-semibold text-center mb-12">
-          Sign Up
-        </h1>
-        <form
-          className="sm:text-lg text-base"
-          onSubmit={onSubmit}
-          disabled={loading}
-        >
-          <div className="flex flex-col mb-4">
-            <label>Username</label>
-            <input
-              type="text"
-              required
-              className="form-input"
-              ref={usernameRef}
-            />
-          </div>
-          <div className="flex flex-col mb-4">
-            <label>Email</label>
-            <input
-              type="email"
-              required
-              className="form-input"
-              ref={emailRef}
-            />
-          </div>
-          <div className="flex flex-col mb-4">
-            <label>Password</label>
-            <input
-              type="password"
-              required
-              className="form-input"
-              ref={passwordRef}
-            />
-          </div>
-          <div className="flex flex-col mb-4">
-            <label>Confirm Password</label>
-            <input
-              type="password"
-              required
-              className="form-input"
-              ref={confirmPWRef}
-            />
-          </div>
-          <p className="text-sm opacity-50">
-            Sudah punya akun?{" "}
-            <Link to="/signin" className="hover:underline text-sm">
-              Sign in
-            </Link>
-          </p>
-          <div className="w-full flex justify-center mt-12">
-            <button
-              type="submit"
-              className="btn-primary sm:text-lg text-base w-full"
+        {!loading ? (
+          <>
+            <h1 className="sm:text-3xl text-2xl font-semibold text-center mb-12">
+              Sign Up
+            </h1>
+            <form
+              className="sm:text-lg text-base"
+              onSubmit={handleSubmit}
+              disabled={loading}
             >
-              Sign up
-            </button>
+              <div className="flex flex-col mb-4">
+                <label>Username</label>
+                <input
+                  type="text"
+                  required
+                  className="form-input"
+                  ref={usernameRef}
+                />
+              </div>
+              <div className="flex flex-col mb-4">
+                <label>Email</label>
+                <input
+                  type="email"
+                  required
+                  className="form-input"
+                  ref={emailRef}
+                />
+              </div>
+              <div className="flex flex-col mb-4">
+                <label>Password</label>
+                <input
+                  type="password"
+                  required
+                  min={8}
+                  className="form-input"
+                  ref={passwordRef}
+                />
+              </div>
+              <div className="flex flex-col mb-4">
+                <label>Confirm Password</label>
+                <input
+                  type="password"
+                  required
+                  className="form-input"
+                  ref={confirmPWRef}
+                />
+              </div>
+              <p className="text-sm opacity-50">
+                Sudah punya akun?{" "}
+                <Link to="/signin" className="hover:underline text-sm">
+                  Sign in
+                </Link>
+              </p>
+              <div className="w-full flex justify-center mt-12">
+                <button
+                  type="submit"
+                  className="btn-primary sm:text-lg text-base w-full"
+                >
+                  Sign up
+                </button>
+              </div>
+            </form>
+          </>
+        ) : (
+          <div className="flex flex-col justify-center items-center space-y-6">
+            <div className="loading-spinner" />
+            <p>Submitting data...</p>
           </div>
-        </form>
+        )}
       </div>
     </div>
   );

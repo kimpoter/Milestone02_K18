@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import AuthContext from "../AuthContext";
 import { Navigate } from "react-router-dom";
+import AuthContext from "../context/AuthContext";
 
 export function PrivateRoute(props) {
   const { currentUser } = useContext(AuthContext);
@@ -16,7 +16,6 @@ export function PublicRoute(props) {
 
 export function AdminRoute(props) {
   const { currentUser } = useContext(AuthContext);
-  console.log(currentUser);
 
   return currentUser.role === "ADMIN" ? props.children : <Navigate to="/" />;
 }
