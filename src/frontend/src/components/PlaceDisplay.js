@@ -1,22 +1,25 @@
 import { PreviewCard } from "./PlaceCard";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import axios from "../api/axios";
 
-function PlaceDisplay({ place_data_url }) {
+function PlaceDisplay({ placeUrl }) {
   const [placeData, setPlaceData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    setPlaceData([]);
     setLoading(true);
-    fetch(place_data_url)
+    axios
+      .get(placeUrl)
       .then((res) => {
-        return res.json();
+        console.log(res);
+        setPlaceData(res.data.data);
       })
-      .then((res) => {
-        setPlaceData(res.data);
+      .catch((err) => {
+        console.log(err);
       })
       .finally(() => setLoading(false));
-  }, [place_data_url]);
+  }, [placeUrl]);
 
   return (
     <>
@@ -25,17 +28,23 @@ function PlaceDisplay({ place_data_url }) {
           {placeData.map((place) => {
             return (
               <Link to={`/place-detail/${place.id}`} key={place.id}>
-                {/* TODO: change category, masih hardcode, harusnya nanti untuk get category
-                                dari tempat makan udah ada urlnya dari be 
-                            */}
                 <PreviewCard place={place} />
               </Link>
             );
           })}
         </ul>
       ) : (
-        <div className="w-full text-center mt-64">
-          {loading ? <h3>Loading...</h3> : <h3>No Data Available Right Now</h3>}
+        <div className="w-full text-center min-h-[50vh] flex justify-center">
+          {loading ? (
+            <div className="flex flex-col justify-center items-center space-y-6">
+              <div className="loading-spinner" />
+              <p>Fetching data...</p>
+            </div>
+          ) : (
+            <div className="flex flex-col justify-center items-center space-y-6">
+              <h3>No Data Available Right Now</h3>
+            </div>
+          )}
         </div>
       )}
     </>

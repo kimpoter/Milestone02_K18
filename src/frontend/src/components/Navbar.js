@@ -1,9 +1,14 @@
 import { FaUserCircle } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
-import AuthContext from "../AuthContext";
-import CampusContext from "../CampusContext";
+import CampusContext from "../context/CampusContext";
+import AuthContext from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+
+const CAMPUS = {
+  GANESHA: "ganesha",
+  JATINANGOR: "jatinangor",
+};
 
 function Navbar(props) {
   const { currentUser, setCurrentUser } = useContext(AuthContext);
@@ -13,7 +18,6 @@ function Navbar(props) {
   function logOut() {
     setCurrentUser({ loggedIn: false });
     localStorage.removeItem("ACCESS_TOKEN");
-    localStorage.removeItem("_TOKEN");
     navigate("/", { replace: true });
   }
 
@@ -28,19 +32,19 @@ function Navbar(props) {
       <div className="flex items-center relative space-x-4 bg-greyscale rounded-l-[36px] pl-6 pr-12 py-4">
         <ul className="flex rounded-[69px] bg-white shadow-[0_0_4px_0_rgba(0,0,0,0.25)] px-1 py-1">
           <button
-            onClick={() => setCampus("GANESHA")}
+            onClick={() => setCampus(CAMPUS.GANESHA)}
             className={
               "px-6 py-1 rounded-[69px] " +
-              (campus === "GANESHA" && "bg-secondary text-white")
+              (campus === CAMPUS.GANESHA && "bg-secondary text-white")
             }
           >
             Ganesha
           </button>
           <button
-            onClick={() => setCampus("JATINANGOR")}
+            onClick={() => setCampus(CAMPUS.JATINANGOR)}
             className={
               "px-6 py-1 rounded-[69px] " +
-              (campus === "JATINANGOR" && "bg-secondary text-white")
+              (campus === CAMPUS.JATINANGOR && "bg-secondary text-white")
             }
           >
             Jatinangor

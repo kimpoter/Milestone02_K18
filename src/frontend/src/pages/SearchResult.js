@@ -1,32 +1,69 @@
 import { useLocation } from "react-router-dom";
 import PlaceDisplay from "../components/PlaceDisplay";
-import { CgSortZa } from "react-icons/cg";
 import SearchFilter from "../components/SearchFilter";
+import CampusContext from "../context/CampusContext";
+import { useContext, useState } from "react";
+
+const SORT = {
+  DISTANCE: "distance",
+  RATING: "rating",
+  PRICE: "price",
+};
 
 export default function SearchResult() {
+  const { campus } = useContext(CampusContext);
+  const [sortState, setSortState] = useState({
+    status: "desc",
+    data: SORT.DISTANCE,
+  });
   return (
     <div className="flex flex-col items-center text-lg text-primary mt-24">
       {/* Filter Search */}
       <SearchFilter preventDefault />
 
-      <div className="bg-[#EFEFEF] w-full p-8 pb-20 rounded-3xl min-h-[90vh] mt-12">
-        <div className="flow-root">
-          <div className="flex justify-between px-40 mt-">
-            <h1 className="text-3xl font-semibold">Hasil Penelusuran</h1>
-            <button className="btn-primary rounded-2xl px-8 py-2 flex items-center">
-              <h3>Sort</h3>
-              <CgSortZa />
+      <div className="bg-[#EFEFEF] w-full p-8 pb-20 rounded-3xl mt-12">
+        <div className="flex flex-wrap justify-between px-40">
+          <h1 className="text-3xl font-semibold mt-4">Hasil Penelusuran</h1>
+          <ul className="flex rounded-[69px] mt-4 bg-white shadow-[0_0_4px_0_rgba(0,0,0,0.25)] px-1 py-1">
+            <button
+              onClick={() =>
+                setSortState({ status: "desc", data: SORT.DISTANCE })
+              }
+              className={
+                "px-6 py-1 rounded-[69px] " +
+                (sortState.data === SORT.DISTANCE && "bg-secondary text-white")
+              }
+            >
+              Jarak
             </button>
-          </div>
+            <button
+              onClick={() =>
+                setSortState({ status: "desc", data: SORT.RATING })
+              }
+              className={
+                "px-6 py-1 rounded-[69px] " +
+                (sortState.data === SORT.RATING && "bg-secondary text-white")
+              }
+            >
+              Rating
+            </button>
+            <button
+              onClick={() => setSortState({ status: "desc", data: SORT.PRICE })}
+              className={
+                "px-6 py-1 rounded-[69px] " +
+                (sortState.data === SORT.PRICE && "bg-secondary text-white")
+              }
+            >
+              Harga
+            </button>
+          </ul>
         </div>
 
-        <div className="flex flex-wrap justify-center w-full">
-          <PlaceDisplay
-            place_data_url={`${process.env.REACT_APP_SERVER_URL}${
-              useLocation().pathname
-            }${useLocation().search}`}
-          />
-        </div>
+        <PlaceDisplay
+          placeUrl={`/tempat-makan/campus/${campus}${
+            useLocation().search
+          }&sort_status=${sortState.status}&sort_data=${sortState.data}`}
+        />
       </div>
     </div>
   );

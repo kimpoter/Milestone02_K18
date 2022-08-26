@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import AuthContext from "../AuthContext";
+import AuthContext from "../context/AuthContext";
 import BookmarkDisplay from "../components/BookmarkDisplay";
 
 export default function BookmarkPage() {
@@ -13,9 +13,7 @@ export default function BookmarkPage() {
             <h1>Bookmark</h1>
           </div>
         </div>
-        <div className="flex flex-wrap justify-center w-full">
-          <BookmarkDisplay />
-        </div>
+        <BookmarkDisplay placeUrl={`/bookmark`} />
       </div>
     </div>
   );

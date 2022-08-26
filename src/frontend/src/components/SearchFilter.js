@@ -2,13 +2,12 @@ import { FaSearch } from "react-icons/fa";
 import FilterTab from "../components/FilterTab";
 import { useContext, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import CampusContext from "../CampusContext";
+import CampusContext from "../context/CampusContext";
 
 const PLACE_URL = {
-  GANESHA: `/tempat-makan/campus/ganesha?sort_status=asc&sort_data=rating`,
-  JATINAGOR: `/tempat-makan/campus/jatinagor?sort_status=asc&sort_data=rating`,
+  ganesha: `/ganesha?`,
+  jatinangor: `/jatinangor?`,
 };
-
 
 function SearchFilter({ preventDefault }) {
   const [filterDisplay, setFilterDisplay] = useState(false);
@@ -24,7 +23,7 @@ function SearchFilter({ preventDefault }) {
     if (preventDefault) {
       e.preventDefault();
     }
-    navigate(`${PLACE_URL[campus]}&search=${searchValue.current.value}`);
+    navigate(`${PLACE_URL[campus]}search=${searchValue.current.value}`);
   }
 
   return (

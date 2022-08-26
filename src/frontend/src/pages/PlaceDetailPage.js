@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import axios from "../api/axios";
 import { MenuContainer, MenuModal } from "../components/Menu";
 import { DetailCard } from "../components/PlaceCard";
 import ReviewDisplay from "../components/ReviewCard";
@@ -10,80 +11,75 @@ function PlaceDetailPage() {
   const [placeData, setPlaceData] = useState(null);
   const [modalState, setModalState] = useState({ url: null });
   const [placeReview, setPlaceReview] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [menuUrl, setMenuUrl] = useState("placeholder.jpg");
+
+  function getReview() {
+    axios
+      .get(`/review/${id}`)
+      .then((res) => {
+        console.log(res);
+        setPlaceReview(res.data.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  function getMenuUrl() {
+    axios
+      .get(`/menu/${id}`)
+      .then((res) => {
+        console.log(res);
+        setMenuUrl(res.data.data[0].imageUrl);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   useEffect(() => {
     setLoading(true);
-    fetch(`${process.env.REACT_APP_SERVER_URL}/tempat-makan/${id}`) // ini nanti harusnya ada url yang bakal langsung nge fetch data tempat makan sesuai id nya
-      .then((res) => {
-        return res.json();
-      })
-      .then((res) => {
-        if (res.status === "success") {
-          setPlaceData(res.data);
-        } else {
-          window.alert(res.status);
-        }
-      })
-      .finally(() => setLoading(false));
-  }, [id]);
-
-  useEffect(() => {
-    fetch(`${process.env.REACT_APP_SERVER_URL}/review/${id}`)
-      .then((res) => {
-        return res.json();
-      })
-      .then((res) => {
-        if (res.status === "success") {
-          setPlaceReview(res.data);
-        } else {
-          window.alert(res.status);
-        }
-      });
-  }, [id]);
-
-  useEffect(() => {
-    fetch(`${process.env.REACT_APP_SERVER_URL}/menu/${id}`)
-      .then((res) => {
-        return res.json();
-      })
+    axios
+      .get(`/tempat-makan/${id}`)
       .then((res) => {
         console.log(res);
-        if (res.status === "success") {
-          setMenuUrl(res.data[0].imageUrl);
-        } else {
-          window.alert(res.status);
-        }
-      });
-  });
+        setPlaceData(res.data.data);
+        getReview();
+        getMenuUrl();
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => setLoading(false));
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <>
-      {placeData && !loading ? (
+      {!loading ? (
         <div className="my-24">
           <div className="mt-12">
             <DetailCard place={placeData} />
           </div>
-          <div className="flex flex-row space-x-20 mt-8">
-            <div className="space-y-2">
+
+          <div className="flex flex-row flex-wrap">
+            <div className="space-y-2 mr-20 mt-8">
               <h2>Cara Pembayaran</h2>
               <div className="flex flex-row space-x-2">
-                {placeData.paymentMethods.length !== 0 ? (
-                  placeData.paymentMethods.forEach((method) => {
-                    return <div className="chips-secondary">{method}</div>;
-                  })
-                ) : (
-                  <p>Tidak ada data</p>
-                )}
+                {placeData.paymentMethods.map((method) => {
+                  return <div className="chips-secondary">{method.name}</div>;
+                })}
               </div>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 mt-8">
               <h2>Platform Pembelian</h2>
               <div className="flex flex-row space-x-2">
                 {placeData.platforms.length !== 0 ? (
-                  placeData.platforms.forEach((platform) => {
-                    return <div className="chips-secondary">{platform}</div>;
+                  placeData.platforms.map((platform) => {
+                    return (
+                      <div className="chips-secondary">{platform.name}</div>
+                    );
                   })
                 ) : (
                   <p>Tidak ada data</p>
@@ -114,7 +110,7 @@ function PlaceDetailPage() {
           </div>
           <div className="flex flex-col gap-3 mt-8 space-y-2">
             <h2>Review</h2>
-            <ReviewForm />
+            <ReviewForm id={id} />
             {placeReview.length !== 0 ? (
               <ReviewDisplay placeReview={placeReview} />
             ) : (
@@ -123,8 +119,9 @@ function PlaceDetailPage() {
           </div>
         </div>
       ) : (
-        <div className="w-full text-center mt-64">
-          {loading ? <h3>Loading...</h3> : <h3>No Data Available Right Now</h3>}
+        <div className="h-[80vh] flex flex-col justify-center items-center space-y-6">
+          <div className="loading-spinner" />
+          <p>Fetching data...</p>
         </div>
       )}
     </>
