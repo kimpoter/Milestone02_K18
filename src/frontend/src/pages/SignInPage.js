@@ -17,11 +17,11 @@ function SignInPage() {
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
 
-    console.log(JSON.stringify({ email, password }));
-
     setLoading(true);
     axios
-      .post(`/auth/signin`, JSON.stringify({ email, password }))
+      .post(`/auth/signin`, JSON.stringify({ email, password }), {
+        headers: { "Content-Type": "application/json" },
+      })
       .then((res) => {
         console.log(res);
         localStorage.setItem("ACCESS_TOKEN", res.data.tokens.access_token);
