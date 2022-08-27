@@ -30,6 +30,18 @@ export class ReviewService {
 
   // Create Review
   async createReview(dto: CreateReviewDto, tempatMakanId: number, userId: number) {
+    // Check if the review already exist
+    const dataReview = await this.prisma.review.findMany({
+      where: {
+        tempatMakanId: tempatMakanId,
+        userId: userId,
+      }
+    })
+
+    if (dataReview[0]) {
+      throw new BadRequestException('Review already exist')
+    }
+
     // Save review data to the database
     try {
       await this.prisma.review.create({
