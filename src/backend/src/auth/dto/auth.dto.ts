@@ -28,4 +28,9 @@ export class SignInDto {
   password: string;
 }
 
+export class UpdateUserDto {
+  @IsNotEmpty()
+  @IsString()
+  username: string;
+}
 

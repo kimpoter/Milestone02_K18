@@ -68,6 +68,75 @@ export class TempatMakanService {
     orderBy[sortData] = sortStatus
 
     const dataAllTempatMakan = await this.prisma.tempatMakan.findMany({
+      orderBy,
+      where: {
+        campus: campus.toUpperCase(),
+        OR: [
+          {
+            name: {
+              contains: searchString ?? '',
+              mode: 'insensitive'
+            }
+          },
+          {
+            categories: {
+              some: {
+                name: {
+                  contains: searchString ?? '',
+                  mode: 'insensitive'
+                }
+              }
+            }
+          },
+          {
+            description: {
+              contains: searchString ?? '',
+              mode: 'insensitive'
+            }
+          }
+        ],
+        AND: [
+          {
+            categories: {
+              [categoryArray ? 'some' : 'every']: {
+                name: {
+                  in: categoryArray,
+                  mode: 'insensitive'
+                }
+              }
+            }
+          },
+          {
+            price: {
+              gte: priceArray[0] ? +priceArray[0] : undefined,
+              lte: priceArray[1] ? +priceArray[1] : undefined,
+            }
+          },
+          {
+            platforms: {
+              [platformArray ? 'some' : 'every']: {
+                name: {
+                  in: platformArray,
+                  mode: 'insensitive'
+                }
+              }
+            }
+          },
+          {
+            paymentMethods: {
+              [paymentArray ? 'some' : 'every']: {
+                name: {
+                  in: paymentArray,
+                  mode: 'insensitive'
+                }
+              }
+            }
+          }
+        ],
+      },
+    })
+
+    const dataFilteredTempatMakan = await this.prisma.tempatMakan.findMany({
       take: 6,
       skip,
       orderBy,
@@ -172,7 +241,10 @@ export class TempatMakanService {
 
     return {
       status: 'success',
-      data: dataAllTempatMakan
+      data: {
+        dataTempatMakan: dataFilteredTempatMakan,
+        totalPages: Math.ceil(dataAllTempatMakan.length / 6)
+      }
     }
   }
 

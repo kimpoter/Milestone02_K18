@@ -1,6 +1,6 @@
 import { BadRequestException, ForbiddenException, Injectable, InternalServerErrorException } from "@nestjs/common";
 import { PrismaService } from "src/prisma/prisma.service";
-import { SignUpDto, SignInDto } from "./dto";
+import { SignUpDto, SignInDto, UpdateUserDto } from "./dto";
 import * as argon2 from 'argon2'
 import { Tokens } from "./types";
 import { JwtService } from "@nestjs/jwt";
@@ -101,7 +101,7 @@ export class AuthService {
     };
   }
 
-  async refreshTokens(email: string, rt: string,): Promise<Tokens> {
+  async refreshTokens(email: string, rt: string): Promise<Tokens> {
     const user = await this.prisma.user.findUnique({
       where: {
         email,
@@ -120,6 +120,21 @@ export class AuthService {
     await this.updateRtHash(user.id, tokens.refresh_token);
 
     return tokens;
+  }
+
+  async updateUser(email: string, dto: UpdateUserDto) {
+    try {
+      await this.prisma.user.update({
+        where: {
+          email,
+        },
+        data: {
+          username: dto.username
+        }
+      })
+    } catch (error) {
+      throw new InternalServerErrorException(error)
+    }
   }
 
   async updateRtHash(userId: number, rt: string) {

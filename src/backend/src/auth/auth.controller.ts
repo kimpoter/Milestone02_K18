@@ -5,6 +5,7 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Put,
   Res,
   UseGuards,
 } from "@nestjs/common";
@@ -17,7 +18,7 @@ import {
 } from "src/common/decorators";
 import { RtGuard } from "src/common/guards";
 import { AuthService } from "./auth.service";
-import { SignInDto, SignUpDto } from "./dto";
+import { SignInDto, SignUpDto, UpdateUserDto } from "./dto";
 
 @Controller("auth")
 export class AuthController {
@@ -149,6 +150,16 @@ export class AuthController {
       status: 'success',
       message: 'New Token has been generated',
       tokens
+    }
+  }
+
+  @Put('/user/update')
+  @HttpCode(HttpStatus.OK)
+  async updateUser(@GetCurrentUserEmail() email: string, @Body() dto: UpdateUserDto) {
+    await this.authService.updateUser(email, dto)
+    return {
+      status: 'success',
+      message: 'User has been updated'
     }
   }
 }
