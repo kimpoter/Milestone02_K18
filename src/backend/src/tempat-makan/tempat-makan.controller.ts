@@ -9,7 +9,7 @@ export class TempatMakanController {
 
   // Get all tempatMakan
   @Public()
-  @Get('/campus/:campus?')
+  @Get('/campus/:campus/:skip?')
   getAllTempatMakan(@Param() param, @Query() query) {
     return this.tempatMakanService.getAllTempatMakan(param, query)
   }
