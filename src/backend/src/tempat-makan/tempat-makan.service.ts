@@ -8,6 +8,14 @@ export class TempatMakanService {
 
   // Get all tempat makan
   async getAllTempatMakan(param, query) {
+    // Skip for pagination
+    let skip
+    try {
+      skip = (+param.skip - 1) * 6
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
+
     // Filter by category
     let categoryArray
     if (query.filter_category) {
@@ -46,7 +54,7 @@ export class TempatMakanService {
     if (sortStatus && sortStatus !== 'asc' && sortStatus !== 'desc') {
       throw new BadRequestException('Bad Request')
     } else if (sortStatus === '') {
-      sortStatus = undefined
+      sortStatus = 'desc'
     }
 
     let sortData = query.sort_data
@@ -60,6 +68,8 @@ export class TempatMakanService {
     orderBy[sortData] = sortStatus
 
     const dataAllTempatMakan = await this.prisma.tempatMakan.findMany({
+      take: 6,
+      skip,
       orderBy,
       where: {
         campus: campus.toUpperCase(),

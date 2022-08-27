@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateReviewDto } from './dto';
 
@@ -55,7 +55,7 @@ export class ReviewService {
     })
 
     // Calculate total rating
-    const totalRating = dataTempatMakan.rating + dto.rating
+    const totalRating = dataTempatMakan.rating * (dataTempatMakan.reviews.length - 1) + dto.rating
 
     // Calculate final rating
     const ratingTempatMakan = totalRating / (dataTempatMakan.reviews.length)
@@ -83,14 +83,48 @@ export class ReviewService {
 
   // Delete Review
   async deleteReview(reviewId: number) {
+    const dataReview = await this.prisma.review.findUnique({
+      where: {
+        id: reviewId
+      },
+    })
+
+    const dataTempatMakan = await this.prisma.tempatMakan.findUnique({
+      where: {
+        id: dataReview.tempatMakanId
+      },
+      include: {
+        reviews: true,
+      }
+    })
+
+    // Calculate new rating
+    const totalRating = dataTempatMakan.rating * dataTempatMakan.reviews.length - dataReview.rating;
+
+    let ratingTempatMakan
     try {
       await this.prisma.review.delete({
         where: {
           id: reviewId,
         }
       })
+      ratingTempatMakan = totalRating / (dataTempatMakan.reviews.length - 1)
     } catch (error) {
       throw new InternalServerErrorException(error)
+    }
+
+    // Update rating on tempat makan
+    try {
+      await this.prisma.tempatMakan.update({
+        where: {
+          id: dataReview.tempatMakanId
+        },
+        data: {
+          rating: ratingTempatMakan
+        }
+      })
+    } catch (error) {
+      throw new BadRequestException(error)
     }
 
     return {
