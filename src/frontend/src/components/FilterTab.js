@@ -1,8 +1,8 @@
 import { Chip } from "@mantine/core";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import CampusContext from "../context/CampusContext";
+import { useNavigate, useLocation } from "react-router-dom";
 import PlaceContext from "../context/PlaceContext";
+import qs from "query-string";
 
 const priceRange = [
   {
@@ -31,12 +31,7 @@ const priceRange = [
   },
 ];
 
-const PLACE_URL = {
-  GANESHA: `/ganesha?`,
-  JATINANGOR: `/jatinangor?`,
-};
-
-function FilterTab({ searchValue }) {
+function FilterTab({ searchValue, sortData, sortStatus }) {
   const { categories, paymentMethods, platforms } = useContext(PlaceContext);
   const [categoriesValue, setCategoriesValue] = useState([]);
   const [platformsValue, setPlatformsValue] = useState([]);
@@ -44,8 +39,8 @@ function FilterTab({ searchValue }) {
   const [priceRangeValue, setPriceRangeValue] = useState("");
   const [minPrice, setMinPrice] = useState(0);
   const [maxPrice, setMaxPrice] = useState(999999);
-  const { campus } = useContext(CampusContext);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     setMinPrice(priceRangeValue);
@@ -57,17 +52,27 @@ function FilterTab({ searchValue }) {
   }, [priceRangeValue]);
 
   function handleSubmit() {
-    navigate(
-      `${
-        PLACE_URL[campus]
-      }search=${searchValue}&filter_category=${categoriesValue.join(
-        ";"
-      )}&filter_price=${minPrice ? minPrice : 0};${
+    let pathname = location.pathname;
+    if (!pathname.includes("result")) {
+      pathname = `${location.pathname}/result`;
+    }
+    const queryParam = qs.parse(searchValue && `?search=${searchValue}`);
+    const newQueryParam = {
+      ...queryParam,
+      sort_data: sortData ? sortData : "rating",
+      sort_status: sortStatus ? sortStatus : "desc",
+      filter_category: categoriesValue.join(";"),
+      filter_price: `${minPrice ? minPrice : 0};${
         maxPrice ? maxPrice : 999999
-      }&filter_platform=${platformsValue.join(
-        ";"
-      )}&filter_payment=${paymentMethodsValue.join(";")}`
-    );
+      }`,
+      filter_platform: platformsValue.join(";"),
+      filter_payment: paymentMethodsValue.join(";"),
+    };
+
+    navigate({
+      pathname: pathname,
+      search: qs.stringify(newQueryParam),
+    });
   }
 
   return (

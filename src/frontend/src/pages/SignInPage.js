@@ -1,14 +1,12 @@
 import { Link } from "react-router-dom";
 import React, { useState, useContext } from "react";
 import axios from "../api/axios";
-import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
 
 function SignInPage() {
   const emailRef = React.useRef(null);
   const passwordRef = React.useRef(null);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const { setCurrentUser } = useContext(AuthContext);
 
   function handleSubmit(e) {
@@ -27,7 +25,7 @@ function SignInPage() {
         localStorage.setItem("ACCESS_TOKEN", res.data.tokens.access_token);
         setCurrentUser({ loggedIn: true });
         setLoading(false);
-        navigate("/", { replace: true });
+        window.location.reload();
       }) // error handling
       .catch((err) => {
         console.log(err);
