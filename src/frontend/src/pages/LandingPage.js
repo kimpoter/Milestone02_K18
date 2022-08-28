@@ -1,16 +1,7 @@
-import { useContext } from "react";
-import CampusContext from "../context/CampusContext";
 import PlaceDisplay from "../components/PlaceDisplay";
 import SearchFilter from "../components/SearchFilter";
 
-const PLACE_URL = {
-  ganesha: `/tempat-makan/campus/ganesha`,
-  jatinangor: `/tempat-makan/campus/jatinangor`,
-};
-
 function LandingPage() {
-  const { campus } = useContext(CampusContext);
-
   return (
     <div className="flex flex-col items-center text-lg text-primary">
       <div className="my-28 bg-gradient-to-r from-greyscale w-[220px] h-[220px] rounded-[48px] px-8 py-8 flex justify-center">
@@ -23,7 +14,7 @@ function LandingPage() {
           <div className="flex justify-start">
             <h1 className="text-3xl font-semibold">Rekomendasi Kami</h1>
           </div>
-          <PlaceDisplay placeUrl={PLACE_URL[campus]} />
+          <PlaceDisplay />
         </div>
       </div>
     </div>

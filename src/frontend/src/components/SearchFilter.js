@@ -5,11 +5,11 @@ import { useNavigate } from "react-router-dom";
 import CampusContext from "../context/CampusContext";
 
 const PLACE_URL = {
-  ganesha: `/ganesha?`,
-  jatinangor: `/jatinangor?`,
+  ganesha: `/ganesha/1/result?`,
+  jatinangor: `/jatinangor/1/result?`,
 };
 
-function SearchFilter({ preventDefault }) {
+function SearchFilter({ preventDefault, sortData, sortStatus }) {
   const [filterDisplay, setFilterDisplay] = useState(false);
   const { campus } = useContext(CampusContext);
   const searchValue = useRef();
@@ -23,7 +23,11 @@ function SearchFilter({ preventDefault }) {
     if (preventDefault) {
       e.preventDefault();
     }
-    navigate(`${PLACE_URL[campus]}search=${searchValue.current.value}`);
+    navigate(
+      `${PLACE_URL[campus]}search=${searchValue.current.value}&sort_data=${
+        sortData ? sortData : "rating"
+      }&sort_status=${sortStatus ? sortStatus : "desc"}`
+    );
   }
 
   return (
@@ -46,7 +50,13 @@ function SearchFilter({ preventDefault }) {
         </button>
       </div>
 
-      {filterDisplay && <FilterTab searchValue={searchValue.current.value} />}
+      {filterDisplay && (
+        <FilterTab
+          searchValue={searchValue.current.value}
+          sortData={sortData}
+          sortStatus={sortStatus}
+        />
+      )}
     </div>
   );
 }

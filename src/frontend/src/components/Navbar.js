@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { useContext } from "react";
 import CampusContext from "../context/CampusContext";
 import AuthContext from "../context/AuthContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const CAMPUS = {
   GANESHA: "ganesha",
@@ -14,42 +14,62 @@ function Navbar(props) {
   const { currentUser, setCurrentUser } = useContext(AuthContext);
   const { campus, setCampus } = useContext(CampusContext);
   const navigate = useNavigate();
-
+  const location = useLocation();
+  console.log(location.pathname.split("/"));
   function logOut() {
     setCurrentUser({ loggedIn: false });
     localStorage.removeItem("ACCESS_TOKEN");
-    navigate("/", { replace: true });
+    navigate(`/${campus}/1`, { replace: true });
   }
 
   return (
     <div className="fixed z-10 w-screen bg-white flex justify-between items-center text-primary pl-12 py-4 shadow-[0_21px_52px_0_rgba(0,0,0,0.1)]">
       <div className="flex items-center space-x-4">
         <img src="logo.svg" className="w-[24px]" alt="ITBFood logo" />
-        <Link to="/" className="font-semibold text-2xl">
+        <Link to={`/${campus}/1`} className="font-semibold text-2xl">
           ITBFood
         </Link>
       </div>
       <div className="flex items-center relative space-x-4 bg-greyscale rounded-l-[36px] pl-6 pr-12 py-4">
-        <ul className="flex rounded-[69px] bg-white shadow-[0_0_4px_0_rgba(0,0,0,0.25)] px-1 py-1">
-          <button
-            onClick={() => setCampus(CAMPUS.GANESHA)}
-            className={
-              "px-6 py-1 rounded-[69px] " +
-              (campus === CAMPUS.GANESHA && "bg-secondary text-white")
-            }
-          >
-            Ganesha
-          </button>
-          <button
-            onClick={() => setCampus(CAMPUS.JATINANGOR)}
-            className={
-              "px-6 py-1 rounded-[69px] " +
-              (campus === CAMPUS.JATINANGOR && "bg-secondary text-white")
-            }
-          >
-            Jatinangor
-          </button>
-        </ul>
+        {(location.pathname.includes(CAMPUS.GANESHA) ||
+          location.pathname.includes(CAMPUS.JATINANGOR)) && (
+          <ul className="flex rounded-[69px] bg-white shadow-[0_0_4px_0_rgba(0,0,0,0.25)] px-1 py-1">
+            <button
+              onClick={() => {
+                setCampus(CAMPUS.GANESHA);
+                navigate(
+                  `${location.pathname.includes("result") ? "/result" : "/"}${
+                    CAMPUS.GANESHA
+                  }/1${location.search}`
+                );
+              }}
+              className={
+                "px-6 py-1 rounded-[69px] " +
+                (location.pathname.includes(CAMPUS.GANESHA) &&
+                  "bg-secondary text-white")
+              }
+            >
+              Ganesha
+            </button>
+            <button
+              onClick={() => {
+                setCampus(CAMPUS.JATINANGOR);
+                navigate(
+                  `${location.pathname.includes("result") ? "/result" : "/"}${
+                    CAMPUS.JATINANGOR
+                  }/1${location.search}`
+                );
+              }}
+              className={
+                "px-6 py-1 rounded-[69px] " +
+                (location.pathname.includes(CAMPUS.JATINANGOR) &&
+                  "bg-secondary text-white")
+              }
+            >
+              Jatinangor
+            </button>
+          </ul>
+        )}
         <button
           onClick={props.handleDropdown}
           className="text-4xl text-white bg-[#A3A3A3] rounded-full"

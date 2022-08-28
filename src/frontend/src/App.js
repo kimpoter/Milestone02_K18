@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useContext, useState } from "react";
 import Navbar from "./components/Navbar";
 import LandingPage from "./pages/LandingPage";
@@ -28,7 +28,7 @@ function App() {
       <ScrollToTop />
       <div className="sm:pt-[100px] pt-[68px] px-16">
         <Routes>
-          <Route path="/" element={<LandingPage campus={campus} />} />
+          <Route path="/:campus/:page" element={<LandingPage />} />
           <Route exact path="/place-detail/:id" element={<PlaceDetailPage />} />
           <Route
             exact
@@ -57,7 +57,7 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route path={`/:campus`} element={<SearchResult />} />
+          <Route path={`/:campus/:page/result`} element={<SearchResult />} />
           <Route
             exact
             path="/user"
@@ -76,6 +76,7 @@ function App() {
               </AdminRoute>
             }
           />
+          <Route path="/" element={<Navigate to={`/${campus}/1`} />} />
         </Routes>
       </div>
     </div>

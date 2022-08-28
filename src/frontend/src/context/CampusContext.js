@@ -1,9 +1,11 @@
 import { createContext, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 const CampusContext = createContext();
 
 export function CampusContextProvider(props) {
-  const [campus, setCampus] = useState("ganesha");
+  const location = useLocation();
+  const [campus, setCampus] = useState(location.pathname.split("/")[1]);
 
   const value = {
     campus,
