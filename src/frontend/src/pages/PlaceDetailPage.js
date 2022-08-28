@@ -12,7 +12,7 @@ function PlaceDetailPage() {
   const [modalState, setModalState] = useState({ url: null });
   const [placeReview, setPlaceReview] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [menuUrl, setMenuUrl] = useState("placeholder.jpg");
+  const [menuUrl, setMenuUrl] = useState([]);
 
   function getReview() {
     axios
@@ -30,8 +30,8 @@ function PlaceDetailPage() {
     axios
       .get(`/menu/${id}`)
       .then((res) => {
-        console.log(res);
-        setMenuUrl(res.data.data[0].imageUrl);
+        console.log(res.data.data);
+        setMenuUrl(res.data.data);
       })
       .catch((err) => {
         console.log(err);
@@ -98,15 +98,7 @@ function PlaceDetailPage() {
 
           <div className="mt-8 space-y-2">
             <h2>Menu</h2>
-            <button
-              onClick={() =>
-                setModalState({
-                  url: menuUrl,
-                })
-              }
-            >
-              <MenuContainer menuImageUrl={menuUrl} />
-            </button>
+              <MenuContainer menuImageUrl={menuUrl} handleOpenModal={setModalState} />
           </div>
           <div className="flex flex-col gap-3 mt-8 space-y-2">
             <h2>Review</h2>

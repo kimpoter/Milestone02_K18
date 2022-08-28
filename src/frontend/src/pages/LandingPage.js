@@ -4,8 +4,12 @@ import SearchFilter from "../components/SearchFilter";
 function LandingPage() {
   return (
     <div className="flex flex-col items-center text-lg text-primary">
-      <div className="my-28 bg-gradient-to-r from-greyscale w-[220px] h-[220px] rounded-[48px] px-8 py-8 flex justify-center">
-        <img src="logo.svg" alt="ITBFood logo" />
+      <div className="my-28 bg-gradient-to-r from-greyscale h-[220px] w-[220px] rounded-[48px] px-8 py-8 flex justify-center items-center">
+        <img
+          src="https://i.ibb.co/6wLnW2V/Logo-ITBFood-1.png"
+          alt="ITBFood logo"
+          className="h-[150px]"
+        />
       </div>
 
       <SearchFilter />

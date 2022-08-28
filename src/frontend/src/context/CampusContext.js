@@ -5,7 +5,12 @@ const CampusContext = createContext();
 
 export function CampusContextProvider(props) {
   const location = useLocation();
-  const [campus, setCampus] = useState(location.pathname.split("/")[1]);
+  const [campus, setCampus] = useState(
+    location.pathname.split("/")[1] === "ganesha" ||
+      location.pathname.split("/")[1] === "jatinagor"
+      ? location.pathname.split("/")[1]
+      : "ganesha"
+  );
 
   const value = {
     campus,

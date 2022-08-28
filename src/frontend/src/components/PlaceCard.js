@@ -86,23 +86,27 @@ export function DetailCard({ place }) {
   }
 
   useEffect(() => {
-    setLoading(true);
-    axios
-      .get(`/bookmark`)
-      .then((res) => {
-        console.log(res.data.data);
-        res.data.data.forEach((item) => {
-          if (item.tempatMakanId === place.id) {
-            console.log("hi");
-            setBookmarkState({ bookmarked: true, id: item.id });
-            return;
-          }
-        });
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => setLoading(false));
+    if (currentUser.loggedIn) {
+      setLoading(true);
+      axios
+        .get(`/bookmark`)
+        .then((res) => {
+          console.log(res.data.data);
+          res.data.data.forEach((item) => {
+            if (item.tempatMakanId === place.id) {
+              console.log("hi");
+              setBookmarkState({ bookmarked: true, id: item.id });
+              return;
+            }
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
+    }
     // eslint-disable-next-line
   }, []);
 
@@ -138,9 +142,13 @@ export function DetailCard({ place }) {
           <p>
             {place.timeOpen} - {place.timeClose}
           </p>
-          {place.categories.map((element) => {
-            return <p key={place.id}>{element.name}</p>;
-          })}
+          <div className="flex flex-row space-x-2">
+            <p>{place.address}</p>
+            <p>|</p>
+            {place.categories.map((element) => {
+              return <p key={place.id}>{element.name}</p>;
+            })}
+          </div>
           <div className="flex flex-row items-center space-x-4 bg-greyscale px-6 py-2 rounded-lg w-full opacity-50">
             <BsLink45Deg />
             <a
