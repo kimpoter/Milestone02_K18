@@ -15,7 +15,6 @@ function Navbar(props) {
   const { campus, setCampus } = useContext(CampusContext);
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location.pathname.split("/"));
   function logOut() {
     setCurrentUser({ loggedIn: false });
     localStorage.removeItem("ACCESS_TOKEN");
@@ -25,7 +24,11 @@ function Navbar(props) {
   return (
     <div className="fixed z-10 w-screen bg-white flex justify-between items-center text-primary pl-12 py-4 shadow-[0_21px_52px_0_rgba(0,0,0,0.1)]">
       <div className="flex items-center space-x-4">
-        <img src="logo.svg" className="w-[24px]" alt="ITBFood logo" />
+        <img
+          src="https://i.ibb.co/6wLnW2V/Logo-ITBFood-1.png"
+          className="w-[24px]"
+          alt="ITBFood logo"
+        />
         <Link to={`/${campus}/1`} className="font-semibold text-2xl">
           ITBFood
         </Link>

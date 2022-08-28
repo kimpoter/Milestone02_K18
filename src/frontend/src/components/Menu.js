@@ -16,6 +16,23 @@ export function MenuModal({ menuImageUrl, closeModal }) {
   );
 }
 
-export function MenuContainer({ menuImageUrl }) {
-  return <img src={menuImageUrl} className="h-[300px]" alt="menu" />;
+export function MenuContainer({ menuImageUrl, handleOpenModal }) {
+  return (
+    <div className="flex flex-row space-x-2">
+      {menuImageUrl.map((image) => {
+        return (
+          <button
+            key={image.id}
+            onClick={() =>
+              handleOpenModal({
+                url: image.imageUrl,
+              })
+            }
+          >
+            <img src={image.imageUrl} className="h-[200px]" alt="menu" />
+          </button>
+        );
+      })}
+    </div>
+  );
 }
