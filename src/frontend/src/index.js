@@ -6,16 +6,22 @@ import { BrowserRouter } from "react-router-dom";
 import { CampusContextProvider } from "./context/CampusContext";
 import { PlaceContextProvider } from "./context/PlaceContext";
 import { AuthContextProvider } from "./context/AuthContext";
+import { MantineProvider } from "@mantine/core";
+import { NotificationsProvider } from "@mantine/notifications";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <BrowserRouter>
-    <AuthContextProvider>
-      <CampusContextProvider>
-        <PlaceContextProvider>
-          <App />
-        </PlaceContextProvider>
-      </CampusContextProvider>
-    </AuthContextProvider>
+    <MantineProvider withNormalizeCSS withGlobalStyles>
+      <NotificationsProvider position="top-right">
+        <AuthContextProvider>
+          <CampusContextProvider>
+            <PlaceContextProvider>
+              <App />
+            </PlaceContextProvider>
+          </CampusContextProvider>
+        </AuthContextProvider>
+      </NotificationsProvider>
+    </MantineProvider>
   </BrowserRouter>
 );

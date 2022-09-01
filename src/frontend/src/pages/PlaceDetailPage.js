@@ -1,25 +1,42 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import axios from "../api/axios";
 import { MenuContainer, MenuModal } from "../components/Menu";
 import { DetailCard } from "../components/PlaceCard";
 import ReviewDisplay from "../components/ReviewCard";
 import { ReviewForm } from "../components/ReviewForm";
+import AuthContext from "../context/AuthContext";
 
 function PlaceDetailPage() {
   const { id } = useParams();
+  const { currentUser } = useContext(AuthContext);
   const [placeData, setPlaceData] = useState(null);
   const [modalState, setModalState] = useState({ url: null });
   const [placeReview, setPlaceReview] = useState([]);
+  const [userReview, setUserReview] = useState(null);
   const [loading, setLoading] = useState(true);
   const [menuUrl, setMenuUrl] = useState([]);
 
+  function getUserReview(reviews) {
+    reviews.forEach((review) => {
+      console.log(review.user, currentUser.userId);
+      if (currentUser.loggedIn && review.userId === currentUser.userId) {
+        return setUserReview(review);
+      }
+    });
+  }
   function getReview() {
     axios
       .get(`/review/${id}`)
       .then((res) => {
         console.log(res);
         setPlaceReview(res.data.data);
+        return res.data.data;
+      })
+      .then((data) => {
+        if (data.length > 0) {
+          getUserReview(data);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -67,8 +84,12 @@ function PlaceDetailPage() {
             <div className="space-y-2 mr-20 mt-8">
               <h2>Cara Pembayaran</h2>
               <div className="flex flex-row space-x-2">
-                {placeData.paymentMethods.map((method) => {
-                  return <div className="chips-secondary">{method.name}</div>;
+                {placeData.paymentMethods.map((method, index) => {
+                  return (
+                    <div key={index} className="chips-secondary">
+                      {method.name}
+                    </div>
+                  );
                 })}
               </div>
             </div>
@@ -76,9 +97,11 @@ function PlaceDetailPage() {
               <h2>Platform Pembelian</h2>
               <div className="flex flex-row space-x-2">
                 {placeData.platforms.length !== 0 ? (
-                  placeData.platforms.map((platform) => {
+                  placeData.platforms.map((platform, index) => {
                     return (
-                      <div className="chips-secondary">{platform.name}</div>
+                      <div key={index} className="chips-secondary">
+                        {platform.name}
+                      </div>
                     );
                   })
                 ) : (
@@ -98,13 +121,20 @@ function PlaceDetailPage() {
 
           <div className="mt-8 space-y-2">
             <h2>Menu</h2>
-              <MenuContainer menuImageUrl={menuUrl} handleOpenModal={setModalState} />
+            <MenuContainer
+              menuImageUrl={menuUrl}
+              handleOpenModal={setModalState}
+            />
           </div>
           <div className="flex flex-col gap-3 mt-8 space-y-2">
             <h2>Review</h2>
-            <ReviewForm id={id} />
+            <ReviewForm id={id} getReview={getReview} />
             {placeReview.length !== 0 ? (
-              <ReviewDisplay placeReview={placeReview} />
+              <ReviewDisplay
+                userReview={userReview}
+                placeReview={placeReview}
+                getReview={getReview}
+              />
             ) : (
               <p>Tidak ada review</p>
             )}
