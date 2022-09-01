@@ -3,6 +3,7 @@ import React, { useState, useContext } from "react";
 import axios from "../api/axios";
 import { useNavigate } from "react-router-dom";
 import AuthContext from "../context/AuthContext";
+import { showNotification } from "@mantine/notifications";
 
 function SignUpPage() {
   const usernameRef = React.useRef(null);
@@ -37,10 +38,28 @@ function SignUpPage() {
         localStorage.setItem("ACCESS_TOKEN", res.data.tokens.access_token);
         setCurrentUser({ loggedIn: true });
         setLoading(false);
+        showNotification({
+          title: "Success",
+          message: "Successfully Signed Up",
+          styles: () => ({
+            root: {
+              "&::before": { backgroundColor: "green" },
+            },
+          }),
+        });
         navigate("/", { replace: true });
       })
       .catch((err) => {
         console.log(err);
+        showNotification({
+          title: "Error",
+          message: "Something went wrong. Failed to sign up",
+          styles: () => ({
+            root: {
+              "&::before": { backgroundColor: "red" },
+            },
+          }),
+        });
       })
       .finally(() => setLoading(false));
   }

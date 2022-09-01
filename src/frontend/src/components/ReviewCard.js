@@ -1,4 +1,8 @@
-import { FaStar } from "react-icons/fa";
+import { showNotification } from "@mantine/notifications";
+import { Modal } from "@mantine/core";
+import { FaStar, FaTrash } from "react-icons/fa";
+import axios from "../api/axios";
+import { useState } from "react";
 
 function formatTimeToDate(timestamp) {
   var months = [
@@ -33,28 +37,98 @@ function Rating({ rating, position }) {
     </div>
   );
 }
-export function ReviewCard({ reviews }) {
+export function ReviewCard({ review, user, getReview }) {
+  const [opened, setOpened] = useState(false);
+  function deleteReview() {
+    axios
+      .delete(`/review/${review.id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("ACCESS_TOKEN")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        showNotification({
+          title: "Success",
+          message: "Your review has been deleted",
+          styles: () => ({
+            root: {
+              "&::before": { backgroundColor: "green" },
+            },
+          }),
+        });
+        setOpened(false);
+        window.location.reload();
+      })
+      .catch((err) => {
+        console.log(err);
+        showNotification({
+          title: "Error",
+          message: "Something went wrong. Failed to delete review",
+          styles: () => ({
+            root: {
+              "&::before": { backgroundColor: "red" },
+            },
+          }),
+        });
+      });
+  }
   return (
     <div className="card py-6 sm:text-base text-sm flex flex-col w-full mt-6">
+      <Modal opened={opened} onClose={() => setOpened(false)} centered>
+        <h2 className="text-center mb-8">Delete Review?</h2>
+        <p className="text-center mb-8">
+          Are you sure you want to delete your review? WARNING This action can't
+          be undone
+        </p>
+        <div className="flex justify-between">
+          <button className="btn-secondary">Cancel</button>
+          <button
+            className="btn-primary bg-red-500"
+            onClick={() => {
+              deleteReview();
+            }}
+          >
+            Delete
+          </button>
+        </div>
+      </Modal>
+      {user && (
+        <button
+          onClick={() => setOpened(true)}
+          className="flex justify-end mb-4 text-greyscale"
+        >
+          <FaTrash />
+        </button>
+      )}
       <div className="flex flex-row justify-between">
-        <p>{formatTimeToDate(reviews.createdAt)}</p>
-        <Rating rating={reviews.rating} />
+        <p>{formatTimeToDate(review.createdAt)}</p>
+        <Rating rating={review.rating} />
       </div>
-      <h2 className="sm:text-base text-sm mt-1">{reviews.user.username}</h2>
-      <p>{reviews.content}</p>
+      <h2 className="sm:text-base text-sm mt-1">{review.user.username}</h2>
+      <p>{review.content}</p>
     </div>
   );
 }
 
-function ReviewDisplay({ placeReview }) {
+function ReviewDisplay({ placeReview, userReview, getReview }) {
   return (
     <ul className="flex flex-col">
+      {userReview !== null && (
+        <div>
+          <ReviewCard review={userReview} user getReview={getReview} />
+        </div>
+      )}
       {placeReview.map((review) => {
-        return (
-          <div key={review.id}>
-            <ReviewCard reviews={review} />
-          </div>
-        );
+        if (userReview == null || review.id !== userReview.id) {
+          return (
+            <div key={review.id}>
+              <ReviewCard review={review} />
+            </div>
+          );
+        } else {
+          return <></>;
+        }
       })}
     </ul>
   );

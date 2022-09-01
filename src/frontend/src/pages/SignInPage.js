@@ -1,13 +1,15 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import React, { useState, useContext } from "react";
 import axios from "../api/axios";
 import AuthContext from "../context/AuthContext";
+import { showNotification } from "@mantine/notifications";
 
 function SignInPage() {
   const emailRef = React.useRef(null);
   const passwordRef = React.useRef(null);
   const [loading, setLoading] = useState(false);
-  const { setCurrentUser } = useContext(AuthContext);
+  const { getUser } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   function handleSubmit(e) {
     e.preventDefault();
@@ -23,12 +25,32 @@ function SignInPage() {
       .then((res) => {
         console.log(res);
         localStorage.setItem("ACCESS_TOKEN", res.data.tokens.access_token);
-        setCurrentUser({ loggedIn: true });
+        getUser();
+        showNotification({
+          title: "Success",
+          message: "Successfully Signed In",
+          styles: () => ({
+            root: {
+              "&::before": { backgroundColor: "green" },
+            },
+          }),
+        });
+        navigate(-1, { replace: true });
         setLoading(false);
-        window.location.reload();
       }) // error handling
       .catch((err) => {
         console.log(err);
+        if (err.response.status >= 400) {
+          showNotification({
+            title: "Error",
+            message: err.response.data.message,
+            styles: () => ({
+              root: {
+                "&::before": { backgroundColor: "red" },
+              },
+            }),
+          });
+        }
       })
       .finally(() => setLoading(false));
   }

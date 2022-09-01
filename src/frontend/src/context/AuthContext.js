@@ -6,20 +6,27 @@ export function AuthContextProvider(props) {
   const [currentUser, setCurrentUser] = useState({ loggedIn: null });
   const [loading, setLoading] = useState(true);
 
+  function getUser() {
+    setLoading(true);
+    axios
+      .get("/auth/user", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("ACCESS_TOKEN")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        setCurrentUser({ loggedIn: true, ...res.data.data });
+      })
+      .catch((err) => {
+        console.log(err);
+        setCurrentUser({ loggedIn: false });
+      })
+      .finally(() => setLoading(false));
+  }
   useEffect(() => {
     if (localStorage.getItem("ACCESS_TOKEN")) {
-      setLoading(true);
-      axios
-        .get("/auth/user")
-        .then((res) => {
-          console.log(res);
-          setCurrentUser({ loggedIn: true, ...res.data.data });
-        })
-        .catch((err) => {
-          console.log(err);
-          setCurrentUser({ loggedIn: false });
-        })
-        .finally(() => setLoading(false));
+      getUser();
     } else {
       setLoading(false);
     }
@@ -28,6 +35,7 @@ export function AuthContextProvider(props) {
   const value = {
     currentUser,
     setCurrentUser,
+    getUser,
   };
 
   return (

@@ -4,6 +4,7 @@ import { useContext } from "react";
 import CampusContext from "../context/CampusContext";
 import AuthContext from "../context/AuthContext";
 import { useNavigate, useLocation } from "react-router-dom";
+import { showNotification } from "@mantine/notifications";
 
 const CAMPUS = {
   GANESHA: "ganesha",
@@ -11,14 +12,23 @@ const CAMPUS = {
 };
 
 function Navbar(props) {
-  const { currentUser, setCurrentUser } = useContext(AuthContext);
+  const { currentUser, getUser } = useContext(AuthContext);
   const { campus, setCampus } = useContext(CampusContext);
   const navigate = useNavigate();
   const location = useLocation();
   function logOut() {
-    setCurrentUser({ loggedIn: false });
     localStorage.removeItem("ACCESS_TOKEN");
-    navigate(`/${campus}/1`, { replace: true });
+    getUser();
+    showNotification({
+      title: "Success",
+      message: "You are logged out",
+      styles: () => ({
+        root: {
+          "&::before": { backgroundColor: "green" },
+        },
+      }),
+    });
+    window.location.reload();
   }
 
   return (

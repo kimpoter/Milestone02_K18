@@ -3,6 +3,7 @@ import ReactStars from "react-rating-stars-component";
 import { useRef, useState } from "react";
 import axios from "../api/axios";
 import { useNavigate } from "react-router-dom";
+import { showNotification } from "@mantine/notifications";
 
 function DateToday() {
   var months = [
@@ -29,7 +30,7 @@ function DateToday() {
   );
 }
 
-export function ReviewForm({ id }) {
+export function ReviewForm({ id, getReview }) {
   const [rating, setRating] = useState(0);
   const contentRef = useRef();
   const [loading, setLoading] = useState(false);
@@ -48,17 +49,41 @@ export function ReviewForm({ id }) {
           rating: rating,
         }),
         {
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("ACCESS_TOKEN")}`,
+            "Content-Type": "application/json",
+          },
         }
       )
       .then((res) => {
         console.log(res);
+        getReview();
+        showNotification({
+          title: "Success",
+          message: "Your review has been added",
+          styles: () => ({
+            root: {
+              "&::before": { backgroundColor: "green" },
+            },
+          }),
+        });
       })
       .catch((err) => {
         console.log(err.response.status);
         if (err.response.status === 401) {
           navigate(`/signin`);
+          return;
         }
+        showNotification({
+          title: "Error",
+          message:
+            "You already add a review. Please delete it first before making another review.",
+          styles: () => ({
+            root: {
+              "&::before": { backgroundColor: "red" },
+            },
+          }),
+        });
       })
       .finally(() => setLoading(false));
   }

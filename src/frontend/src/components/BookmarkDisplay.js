@@ -10,7 +10,11 @@ function BookmarkDisplay({ placeUrl }) {
   useEffect(() => {
     setLoading(true);
     axios
-      .get(placeUrl)
+      .get(placeUrl, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("ACCESS_TOKEN")}`,
+        },
+      })
       .then((res) => {
         console.log(res);
         setPlaceData(res.data.data);
