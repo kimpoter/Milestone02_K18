@@ -53,7 +53,7 @@ export class TempatMakanService {
     let sortStatus = query.sort_status
     if (sortStatus && sortStatus !== 'asc' && sortStatus !== 'desc') {
       throw new BadRequestException('Bad Request')
-    } else if (sortStatus === '' || !sortData) {
+    } else if (sortStatus === '' || !sortStatus) {
       sortStatus = 'desc'
     }
 
