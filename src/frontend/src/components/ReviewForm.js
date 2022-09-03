@@ -56,7 +56,6 @@ export function ReviewForm({ id, getReview }) {
         }
       )
       .then((res) => {
-        console.log(res);
         getReview();
         showNotification({
           title: "Success",
@@ -69,7 +68,6 @@ export function ReviewForm({ id, getReview }) {
         });
       })
       .catch((err) => {
-        console.log(err.response.status);
         if (err.response.status === 401) {
           navigate(`/signin`);
           return;
@@ -102,7 +100,6 @@ export function ReviewForm({ id, getReview }) {
                 filledIcon={<FaStar />}
                 onChange={(newRating) => {
                   setRating(newRating);
-                  console.log(rating);
                 }}
               />
             </div>

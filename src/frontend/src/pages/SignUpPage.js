@@ -34,7 +34,6 @@ function SignUpPage() {
         }
       )
       .then((res) => {
-        console.log(res);
         localStorage.setItem("ACCESS_TOKEN", res.data.tokens.access_token);
         setCurrentUser({ loggedIn: true });
         setLoading(false);
@@ -50,7 +49,6 @@ function SignUpPage() {
         navigate("/", { replace: true });
       })
       .catch((err) => {
-        console.log(err);
         showNotification({
           title: "Error",
           message: "Something went wrong. Failed to sign up",

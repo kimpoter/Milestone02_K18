@@ -15,11 +15,9 @@ export function AuthContextProvider(props) {
         },
       })
       .then((res) => {
-        console.log(res);
         setCurrentUser({ loggedIn: true, ...res.data.data });
       })
       .catch((err) => {
-        console.log(err);
         setCurrentUser({ loggedIn: false });
       })
       .finally(() => setLoading(false));

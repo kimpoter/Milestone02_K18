@@ -21,8 +21,6 @@ export default function SearchResult() {
       sort_status: status,
     };
 
-    console.log(newQueryParam);
-    console.log(location.pathname);
     navigate({
       pathname: location.pathname,
       search: qs.stringify(newQueryParam),

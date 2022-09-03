@@ -19,7 +19,6 @@ function PlaceDetailPage() {
 
   function getUserReview(reviews) {
     reviews.forEach((review) => {
-      console.log(review.user, currentUser.userId);
       if (currentUser.loggedIn && review.userId === currentUser.userId) {
         return setUserReview(review);
       }
@@ -29,7 +28,6 @@ function PlaceDetailPage() {
     axios
       .get(`/review/${id}`)
       .then((res) => {
-        console.log(res);
         setPlaceReview(res.data.data);
         return res.data.data;
       })
@@ -38,21 +36,16 @@ function PlaceDetailPage() {
           getUserReview(data);
         }
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   }
 
   function getMenuUrl() {
     axios
       .get(`/menu/${id}`)
       .then((res) => {
-        console.log(res.data.data);
         setMenuUrl(res.data.data);
       })
-      .catch((err) => {
-        console.log(err);
-      });
+      .catch((err) => {});
   }
 
   useEffect(() => {
@@ -60,14 +53,11 @@ function PlaceDetailPage() {
     axios
       .get(`/tempat-makan/${id}`)
       .then((res) => {
-        console.log(res);
         setPlaceData(res.data.data);
         getReview();
         getMenuUrl();
       })
-      .catch((err) => {
-        console.log(err);
-      })
+      .catch((err) => {})
       .finally(() => setLoading(false));
     // eslint-disable-next-line
   }, []);

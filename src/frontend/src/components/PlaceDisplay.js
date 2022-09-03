@@ -26,13 +26,10 @@ function PlaceDisplay() {
     axios
       .get(`/tempat-makan/campus/${campus}/${page}${location.search}`)
       .then((res) => {
-        console.log(res);
         setPlaceData(res.data.data.dataTempatMakan);
         setPageCount(res.data.data.totalPages);
       })
-      .catch((err) => {
-        console.log(err);
-      })
+      .catch((err) => {})
       .finally(() => setLoading(false));
   }, [currentPage, campus, location.search, location.pathname, page]);
 
