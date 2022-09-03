@@ -16,12 +16,9 @@ function BookmarkDisplay({ placeUrl }) {
         },
       })
       .then((res) => {
-        console.log(res);
         setPlaceData(res.data.data);
       })
-      .catch((err) => {
-        console.log(err);
-      })
+      .catch((err) => {})
       .finally(() => setLoading(false));
   }, [placeUrl]);
 

@@ -23,7 +23,6 @@ function SignInPage() {
         headers: { "Content-Type": "application/json" },
       })
       .then((res) => {
-        console.log(res);
         localStorage.setItem("ACCESS_TOKEN", res.data.tokens.access_token);
         getUser();
         showNotification({
@@ -39,7 +38,6 @@ function SignInPage() {
         setLoading(false);
       }) // error handling
       .catch((err) => {
-        console.log(err);
         if (err.response.status >= 400) {
           showNotification({
             title: "Error",

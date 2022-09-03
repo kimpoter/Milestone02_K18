@@ -75,7 +75,6 @@ export function DetailCard({ place }) {
         }
       )
       .then((res) => {
-        console.log(res);
         setBookmarkState({ bookmarked: true });
         getBookmark();
         showNotification({
@@ -89,7 +88,6 @@ export function DetailCard({ place }) {
         });
       })
       .catch((err) => {
-        console.log(err);
         showNotification({
           title: "Error",
           message: "Failed to add place to bookmark",
@@ -112,7 +110,6 @@ export function DetailCard({ place }) {
         },
       })
       .then((res) => {
-        console.log(res);
         setBookmarkState({ bookmarked: false });
         showNotification({
           title: "Success",
@@ -125,7 +122,6 @@ export function DetailCard({ place }) {
         });
       })
       .catch((err) => {
-        console.log(err);
         showNotification({
           title: "Error",
           message: "Failed to remove place from bookmark",
@@ -148,7 +144,6 @@ export function DetailCard({ place }) {
         },
       })
       .then((res) => {
-        console.log(res.data.data);
         res.data.data.forEach((item) => {
           if (item.tempatMakanId === place.id) {
             setBookmarkState({ bookmarked: true, id: item.id });
@@ -156,9 +151,7 @@ export function DetailCard({ place }) {
           }
         });
       })
-      .catch((err) => {
-        console.log(err);
-      })
+      .catch((err) => {})
       .finally(() => setLoading(false));
   }
 

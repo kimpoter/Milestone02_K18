@@ -47,7 +47,6 @@ export function ReviewCard({ review, user, getReview }) {
         },
       })
       .then((res) => {
-        console.log(res);
         showNotification({
           title: "Success",
           message: "Your review has been deleted",
@@ -61,7 +60,6 @@ export function ReviewCard({ review, user, getReview }) {
         window.location.reload();
       })
       .catch((err) => {
-        console.log(err);
         showNotification({
           title: "Error",
           message: "Something went wrong. Failed to delete review",
