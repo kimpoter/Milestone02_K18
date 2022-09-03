@@ -53,14 +53,14 @@ export class TempatMakanService {
     let sortStatus = query.sort_status
     if (sortStatus && sortStatus !== 'asc' && sortStatus !== 'desc') {
       throw new BadRequestException('Bad Request')
-    } else if (sortStatus === '') {
+    } else if (sortStatus === '' || !sortData) {
       sortStatus = 'desc'
     }
 
     let sortData = query.sort_data
     if (sortData && sortData !== 'rating' && sortData !== 'distance' && sortData !== 'price') {
       throw new BadRequestException('Bad Request')
-    } else if (sortData === '') {
+    } else if (sortData === '' || !sortData) {
       sortData = 'rating'
     }
 
